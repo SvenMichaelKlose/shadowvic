@@ -27,13 +27,13 @@ struct operand_string {
     const char * str;
     int addrmode;
 } operand_strings[] = {
-    { "#", AM_IMM, },
-    { "(", AM_IZPX + AM_IZPY, },
+    { "#", AM_IMM },
+    { "(", AM_IZPX + AM_IZPY + AM_INDI },
 
-    { ")", AM_IZPY, },
-    { ",", AM_ZPX + AM_IZPX + AM_IZPY + AM_ABSX + AM_ABSY, },
-    { "x", AM_ZPX + AM_IZPX + AM_ABSX, },
-    { "y", AM_IZPY + AM_ABSY, },
+    { ")", AM_IZPY },
+    { ",", AM_ZPX + AM_IZPX + AM_IZPY + AM_ABSX + AM_ABSY },
+    { "x", AM_ZPX + AM_IZPX + AM_ABSX },
+    { "y", AM_IZPY + AM_ABSY },
     { ")", AM_IZPX + AM_INDI },
     { NULL, 0 }
 };
