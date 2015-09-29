@@ -49,9 +49,7 @@ screen_update ()
     vic_video (video_width (), video_height ());
     call_frame_interceptor ();
     video_commit ();
-#if 0
     sync_frame ();
-#endif
 }
 
 #define X_TEST      0
