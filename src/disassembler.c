@@ -53,7 +53,6 @@ disassemble (FILE * f, address pc)
     struct instruction * i = &opcode_map[m[pc]];
     struct operand_string * s = operand_strings;
 
-    fprintf (f, "$%04hx: ", m[0x00c1] + (m[0x00c2] << 8));
     fprintf (f, "$%04hx: %s ", pc, i->mnemonic);
 
     print_operand_string (f, s++, i->addrmode);
