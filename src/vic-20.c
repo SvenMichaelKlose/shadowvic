@@ -202,7 +202,7 @@ vic20_emulate (unsigned program_start)
     pc = program_start;
     num_instructions = 0;
 
-    while (1) {
+    while (!do_exit) {
         mos6502_emulate ();
         num_instructions++;
         update_rastercount ();
@@ -213,8 +213,6 @@ vic20_emulate (unsigned program_start)
             get_joystick_status ();
             rom_interrupt ();
         }
-        if (do_exit)
-            return;
     }
 }
 
