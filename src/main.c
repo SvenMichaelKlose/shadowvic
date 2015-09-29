@@ -5,7 +5,7 @@
 #include "types.h"
 #include "config.h"
 #include "6502.h"
-#include "vic-20.h"
+#include "shadowvic.h"
 #include "joystick.h"
 #include "video.h"
 #include "sync.h"

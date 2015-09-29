@@ -13,7 +13,7 @@
 #include "6561.h"
 #include "joystick.h"
 #include "sync.h"
-#include "vic-20.h"
+#include "shadowvic.h"
 
 #include "chargen.c"
 #include "kernal.c"

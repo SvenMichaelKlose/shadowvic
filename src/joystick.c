@@ -10,7 +10,7 @@
 #include <unistd.h>
 
 #include "joystick.h"
-#include "vic-20.h"
+#include "shadowvic.h"
 
 int joystick_num_buttons;
 int joystick_num_axis;
