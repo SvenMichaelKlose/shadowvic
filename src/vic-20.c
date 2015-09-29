@@ -19,8 +19,8 @@
 #include "kernal.c"
 #include "basic.c"
 
+struct vic20_config * config = NULL;
 int do_exit = FALSE;
-int do_use_paddle = FALSE;
 
 void
 vic20_stop ()
@@ -39,8 +39,8 @@ vic20_intercept_frame (void (*f) ())
 void
 call_frame_interceptor ()
 {
-    if (frame_interception)
-        frame_interception ();
+    if (config->frame_interceptor)
+        config->frame_interceptor ();
 }
 
 void
@@ -112,7 +112,7 @@ playback_read (int fd, void * buf, size_t len)
 void
 record_joystick_status ()
 {
-    if (do_use_paddle) {
+    if (config->use_paddles) {
         playback_write (recfile, &m[0x9111], 1);
         playback_write (recfile, &m[0x9008], 1);
     } else {
@@ -124,7 +124,7 @@ record_joystick_status ()
 void
 play_joystick_status ()
 {
-    if (do_use_paddle) {
+    if (config->use_paddles) {
         playback_read (playfile, &m[0x9111], 1);
         playback_read (playfile, &m[0x9008], 1);
     } else {
@@ -149,7 +149,7 @@ void
 emulate_joystick_via ()
 {
     joystick_update ();
-    if (do_use_paddle) {
+    if (config->use_paddles) {
         m[0x9111] = *joystick_buttons ? 0 : 16;
         m[0x9008] = 255 - ((joystick_hposition () + 32768) >> 8);
     } else {
@@ -207,9 +207,8 @@ vic20_emulate (unsigned program_start)
         num_instructions++;
         update_rastercount ();
         if (FRAME_IS_COMPLETE()) {
-#ifndef MANUAL_SCREEN_UPDATE
-            screen_update ();
-#endif
+            if (!config->manual_screen_updates)
+                screen_update ();
             get_joystick_status ();
             rom_interrupt ();
         }
@@ -217,26 +216,31 @@ vic20_emulate (unsigned program_start)
 }
 
 void
-set_default_vic_register_values (int is_expanded)
+set_default_vic_register_values ()
 {
     int i;
 
     for (i = 0; i < 16; i++)
         m[0x9000 + i] = m[0xede4 + i];
-    if (!is_expanded)
+    if (!config->is_expanded)
         m[0x9002] = m[0x9002] | 128;
 }
 
 void
-vic20_init (int is_expanded, int uses_paddle)
+vic20_open (struct vic20_config * cfg)
 {
+    config = cfg;
     do_exit = FALSE;
-    do_use_paddle = uses_paddle;
-    sync_set_fps (FRAMES_PER_SECOND);
+    sync_set_fps (config->frames_per_second);
     bzero (m, 65536);
 
     memcpy (&m[0x8000], &chargen, sizeof (chargen));
     memcpy (&m[0xc000], &basic, sizeof (basic));
     memcpy (&m[0xe000], &kernal, sizeof (kernal));
-    set_default_vic_register_values (is_expanded);
+    set_default_vic_register_values ();
+}
+
+void
+vic20_close ()
+{
 }

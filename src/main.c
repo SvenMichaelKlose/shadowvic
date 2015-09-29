@@ -10,30 +10,30 @@
 #include "video.h"
 #include "sync.h"
 
-void
-open_io ()
-{
-    joystick_open ();
-    video_open ();
-    video_map ();
-}
-
-void
-close_io ()
-{
-    video_close ();
-    joystick_close ();
-}
+#define FALSE   0
+#define TRUE    1
 
 int
 main (int argc, char * argv[])
 {
+    struct vic20_config config = {
+        .is_expanded = FALSE,
+        .use_paddles = FALSE,
+        .manual_screen_updates = FALSE,
+        .frames_per_second = 50,
+        .frame_interceptor = NULL
+    };
+
     printf ("shadowVIC – https://github.com/SvenMichaelKlose/shadowvic/");
 
-    open_io ();
-    vic20_init (FALSE, FALSE);
+    joystick_open ();
+    video_open ();
+    video_map ();
+    vic20_open (&config);
     vic20_emulate (m[0xfffc] + (m[0xfffd] << 8));
-    close_io ();
+    vic20_close ();
+    video_close ();
+    joystick_close ();
 
     return 0;
 }
