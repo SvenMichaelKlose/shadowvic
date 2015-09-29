@@ -43,7 +43,7 @@ it to be able to access the framebuffer device.
 
 shadowVIC emulates:
 
-* 6502 CPU without BCD math
+* 6502 CPU without BCD math or undocumented instructions
 * most basic 6560/6561 graphics display
 * VIA joystick status
 
