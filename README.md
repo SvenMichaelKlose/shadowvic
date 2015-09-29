@@ -35,6 +35,9 @@ need to tell shadowVIC:
 ./make.sh -DHAVE_32_BPP
 ```
 
+-DDISASSEMBLE will output a disassemblies of executed
+instructions.
+
 Please note that you might have to run shadowVIC as root for
 it to be able to access the framebuffer device.
 
