@@ -93,7 +93,7 @@ e_branch ()
 void
 e_writeback ()
 {
-    if (operand >= 0xc000 || (operand >= 0x2000 && operand < 0x9000))
+    if (operand >= 0xc000 || (operand >= 0x8000 && operand < 0x9000))
         return;
     if (operand_is_accu) {
         a = r;

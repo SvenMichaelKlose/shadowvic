@@ -27,6 +27,9 @@ how to implement them (please!):
 
 # Building
 
+The make script generates shadowVIC trying to boot BASIC, an
+object file archive and a binary of the game Pulse.
+
 If your framebuffer device is set to 32 bits per pixel, you
 need to tell shadowVIC:
 
