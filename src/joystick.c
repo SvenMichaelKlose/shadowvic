@@ -27,6 +27,10 @@ joystick_open ()
     joystick_fd = open ("/dev/input/js0", O_RDONLY | O_NONBLOCK);
     if (joystick_fd < 0) {
         printf ("No joystick.\n");
+        joystick_num_buttons = 1;
+        joystick_num_axis = 2;
+        joystick_buttons = (char *) malloc (1);
+        joystick_axis = (int *) malloc (2);
         return;
     }
     if (ioctl (joystick_fd, JSIOCGNAME(sizeof (name)), name) < 0)
