@@ -1,4 +1,9 @@
-bin_PROGRAMS = pulse
+bin_PROGRAMS = pulse picovic
+
 pulse_SOURCES = pulse.c
-pulse_CPPFLAGS = -I$(top_srcdir)/src
-pulse_LDADD = ../src/libshadowvic.a
+pulse_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include
+pulse_LDADD = ../src/libshadowvic.la
+
+picovic_SOURCES = picovic.c
+picovic_CPPFLAGS = -I$(top_srcdir)/src -I$(top_srcdir)/include
+picovic_LDADD = ../src/libshadowvic.la

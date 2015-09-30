@@ -31,16 +31,13 @@ shadowVIC uses the GNU autotools to get built and installed.
 Accordingly, you need to have autoconf and automake installed.
 
 ```
-sudo aptitude install automake autoconf
+sudo aptitude install automake autoconf libtool
+libtoolize
+autoreconf -i
 automake --add-missing
-autoconf
 ./configure
 make
 ```
-
-The make script generates picovic, which is shadowVIC trying to
-boot BASIC as well as the VIC-20 game pulse, which you can play
-with a joystick.
 
 To get maximum performance out of shadowVIC with gcc, you should
 specifiy the following options:
@@ -55,8 +52,26 @@ configure it like this:
 ./configure CPPFLAGS="-DDISASSEMBLE"
 ```
 
-Please note that you might have to run shadowVIC as root for
-it to be able to access the framebuffer device.
+
+# Installing
+
+After building shadowVIC you can install it by typing:
+
+```
+sudo make install
+```
+
+
+## What is installed?
+
+By default the shared and static libraries, headers and binaries
+are installed to /usr/local.  The binaries installed are:
+
+* picovicm which is shadowVIC trying to boot BASIC,
+* pulse, a horizontally scrolling shoot-them-up which you can play with a joystick.
+
+Please note that you might have to run shadowVIC programs as root
+for them to be able to access the framebuffer device.
 
 
 ## What is emulated?
@@ -91,6 +106,7 @@ The illegal opcode $22 (which would jam the CPU) signals an
 emulator call.  It is followed by a byte ID and optional
 parameters.
 
+
 ## Test
 
 ```
@@ -102,6 +118,7 @@ accumulater and X and Y registers are compared with the
 parameters provided and the emulator is halted if they don't
 match.
 
+
 ## Exit
 
 ```
@@ -110,6 +127,7 @@ $22 $01
 
 Exits the emulator.
 
+
 ## Screen update
 
 ```
@@ -117,4 +135,4 @@ $22 $02
 ```
 
 Makes the emulator update the display and waits to sync
-the output with FRAMES_PER_SECOND.
+the output with the frames per second specified.
