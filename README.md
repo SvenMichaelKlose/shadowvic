@@ -67,7 +67,7 @@ sudo make install
 By default the shared and static libraries, headers and binaries
 are installed to /usr/local.  The binaries installed are:
 
-* picovicm which is shadowVIC trying to boot BASIC,
+* picovic which is shadowVIC trying to boot BASIC,
 * pulse, a horizontally scrolling shoot-them-up which you can play with a joystick.
 
 Please note that you might have to run shadowVIC programs as root
