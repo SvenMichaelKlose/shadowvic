@@ -14,7 +14,7 @@ draw_pixel (unsigned x, unsigned y, rgb565_t color)
 {
     unsigned ofs = x * video_bytes_per_pixel + y * video_line_length ();
 
-#ifdef HAVE_32_BPP
+#ifndef WITHOUT_32_BPP
     if (video_bytes_per_pixel == 4) {
         * (byte *) &pixels[ofs + 0] = color << 3;
         * (byte *) &pixels[ofs + 1] = color >> 5 << 2;
