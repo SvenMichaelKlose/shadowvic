@@ -1,11 +1,12 @@
 # shadowVIC
 
-This is a minimalistic Commodore VIC-20 emulator that is
-compiled with the native binaries it runs.
+This is a minimalistic Commodore VIC-20 emulator library for
+Linux with framebuffer device.  Other Unices have not been
+tested, yet.
 
 You can either use shadowVIC on low–performance devices as a
 replacement for other emulators, which are too slow, or to
-basically retain the original program cores and upgrading it
+basically retain the original program cores and upgrading them
 with better graphics and sound.
 
 
@@ -14,7 +15,6 @@ with better graphics and sound.
 You can help out with these things or by telling
 how to implement them (please!):
 
-* A proper make script with library target.
 * Keyboard emulation that stops BASIC from hanging.
 * 6560/6561 reverse mode.
 * Basic VIA interrupts.
@@ -27,19 +27,33 @@ how to implement them (please!):
 
 # Building
 
-The make script generates shadowVIC trying to boot BASIC, an
-object file archive and a binary of the game Pulse.
-
-If your framebuffer device is set to 32 bits per pixel, you
-need to tell shadowVIC:
-
+shadowVIC uses the GNU autotools to get built and installed.
+Accordingly, you need to have autoconf and automake installed.
 
 ```
-./make.sh -DHAVE_32_BPP
+sudo aptitude install automake autoconf
+automake --add-missing
+autoconf
+./configure
+make
 ```
 
--DDISASSEMBLE will output a disassemblies of executed
-instructions.
+The make script generates picovic, which is shadowVIC trying to
+boot BASIC as well as the VIC-20 game pulse, which you can play
+with a joystick.
+
+To get maximum performance out of shadowVIC with gcc, you should
+specifiy the following options:
+
+```
+./configure CFLAGS="-O3 -flto"
+```
+
+shadowVIC disassembles the CPU instructions it executes, if you
+configure it like this:
+```
+./configure CPPFLAGS="-DDISASSEMBLE"
+```
 
 Please note that you might have to run shadowVIC as root for
 it to be able to access the framebuffer device.
