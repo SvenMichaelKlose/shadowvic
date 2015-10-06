@@ -99,7 +99,7 @@ playback_write (int fd, const void * buf, size_t len)
 {
     int r =  write (fd, buf, len);
     if (r < 1)
-        printf ("Cannot write to recording.\n");
+        printf ("Cannot write to recording: %s\n", strerror (errno));
 }
 
 void
@@ -107,7 +107,7 @@ playback_read (int fd, void * buf, size_t len)
 {
     int r = read (fd, buf, len);
     if (r < 1)
-        printf ("Cannot read from recording.\n");
+        printf ("Cannot read from recording: %s\n", strerror (errno));
 }
 
 void
