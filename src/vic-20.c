@@ -97,17 +97,17 @@ int playfile;
 void
 playback_write (int fd, const void * buf, size_t len)
 {
-    int r =  write (fd, buf, len);
-    if (r < 1)
-        printf ("Cannot write to recording: %s\n", strerror (errno));
+    size_t r =  write (fd, buf, len);
+    if (r < len)
+        printf ("Cannot write to recording, wrote %d bytes instead of %d: %s\n", (int) r, (int) len, strerror (errno));
 }
 
 void
 playback_read (int fd, void * buf, size_t len)
 {
-    int r = read (fd, buf, len);
-    if (r < 1)
-        printf ("Cannot read from recording: %s\n", strerror (errno));
+    size_t r = read (fd, buf, len);
+    if (r < len)
+        printf ("Cannot read from recording, read %d bytes instead of %d %s\n", (int) r, (int) len, strerror (errno));
 }
 
 void
