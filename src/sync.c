@@ -7,7 +7,6 @@
 #include <string.h>
 
 #include "types.h"
-#include "config.h"
 #include "sync.h"
 
 #define FRAME_INTERVAL(fps)  (1000000 / fps)

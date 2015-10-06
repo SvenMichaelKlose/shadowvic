@@ -8,7 +8,6 @@
 #include <stdio.h>
 
 #include "types.h"
-#include "config.h"
 #include "6502.h"
 #include "video.h"
 #include "6561.h"

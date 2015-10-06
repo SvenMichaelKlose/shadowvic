@@ -7,7 +7,6 @@
 #include <errno.h>
 
 #include "types.h"
-#include "config.h"
 #include "video.h"
 #include "6502.h"
 #include "6561.h"
@@ -18,6 +17,8 @@
 #include "chargen.c"
 #include "kernal.c"
 #include "basic.c"
+
+#define SCREEN_UPDATE_INSTRUCTIONS  8000
 
 struct vic20_config * config = NULL;
 int do_exit = FALSE;
