@@ -71,10 +71,10 @@ are installed to /usr/local.  The binaries installed are:
 * pulse, a horizontally scrolling shoot-them-up which you can play with a joystick.
 
 Please note that you might have to run shadowVIC programs as root
-for them to be able to access the framebuffer device.  If you're wondering why
-you don't see anything: you have to switch to the console on which the framebuffer
-is displayed.  Most likely that is done by pressing Ctrl, Alt and some function
-key.
+for them to be able to access the framebuffer device.  If you're
+wondering why you don't see anything: you have to switch to the
+console on which the framebuffer is displayed.  Most likely that
+is done by pressing Ctrl, Alt and some function key.
 
 
 ## What is emulated?
