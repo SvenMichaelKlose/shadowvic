@@ -305,7 +305,7 @@ e_cmp_shared (byte a)
 {
     int diff = a - r;
     n = diff & 0x80;
-    z = !(byte) diff;
+    z = !diff;
     c = 0 <= diff;
 }
 
