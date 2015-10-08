@@ -176,6 +176,7 @@ get_joystick_status ()
 unsigned num_instructions = 0;
 
 #define FRAME_IS_COMPLETE()   (!(num_instructions % SCREEN_UPDATE_INSTRUCTIONS))
+#define HALF_FRAME_IS_COMPLETE()   (!(num_instructions % (SCREEN_UPDATE_INSTRUCTIONS / 2)))
 
 void
 update_rastercount ()
@@ -187,13 +188,17 @@ update_rastercount ()
 }
 
 void
-rom_interrupt ()
+irq ()
 {
-    if (mos6502_interrupt_flag ())
-        return;
+    if (!mos6502_interrupt_flag ())
+        mos6502_interrupt (m[0xfffe] + (m[0xffff] << 8));
+}
 
-    mos6502_interrupt (m[0xfffe] + (m[0xffff] << 8));
-    mos6502_interrupt (m[0xfffa] + (m[0xfffb] << 8));
+void
+nmi ()
+{
+    if (!mos6502_interrupt_flag ())
+        mos6502_interrupt (m[0xfffa] + (m[0xfffb] << 8));
 }
 
 void
@@ -211,8 +216,10 @@ vic20_emulate (unsigned program_start)
             if (!config->manual_screen_updates)
                 screen_update ();
             get_joystick_status ();
-            rom_interrupt ();
+            irq ();
         }
+        if (HALF_FRAME_IS_COMPLETE())
+            nmi ();
     }
 }
 
