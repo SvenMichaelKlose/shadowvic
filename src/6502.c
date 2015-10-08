@@ -425,7 +425,7 @@ void e_nop () {}
 void
 e_ill ()
 {
-    printf ("Illegal opcode %d at %d.\n", opcode, pc - 1);
+    printf ("Illegal opcode %02hx at %04hx.\n", opcode, pc - 1);
     exit (255);
 }
 
