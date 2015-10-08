@@ -75,13 +75,12 @@ e_accu ()
 
 void e_imm ()  { r = e_fetch_byte (); }
 void e_zp ()   { r = e_get_operand (e_fetch_byte ()); }
-void e_zpx ()  { r = e_get_operand ((e_fetch_byte () + x) & 0xff); }
-void e_zpy ()  { r = e_get_operand ((e_fetch_byte () + y) & 0xff); } /* TODO: Implement LDX/STX zp,Y */
+void e_zpx ()  { r = e_get_operand (e_fetch_byte () + x); }
 void e_abs ()  { r = e_get_operand (e_fetch_word ()); }
 void e_absx () { r = e_get_operand (e_fetch_word () + x); }
 void e_absy () { r = e_get_operand (e_fetch_word () + y); }
-void e_izpx () { r = e_get_operand (e_get_word ((e_fetch_byte () + x) & 0xff); }
-void e_izpy () { r = e_get_operand (e_get_word ((e_fetch_byte () + y) & 0xff); }
+void e_izpx () { r = e_get_operand (e_get_word (e_fetch_byte () + x)); }
+void e_izpy () { r = e_get_operand (e_get_word (e_fetch_byte ()) + y); }
 void e_indi () { operand = e_get_word (e_fetch_word ()); }
 
 void
@@ -209,7 +208,6 @@ e_sbc ()
     e_adc ();
 }
 
-
 /*
  * Logical
  */
@@ -217,21 +215,21 @@ e_sbc ()
 void
 e_and ()
 {
-    a &= r;
+    a = a & r;
     e_arith_flags (a);
 }
 
 void
 e_ora ()
 {
-    a |= r;
+    a = a | r;
     e_arith_flags (a);
 }
 
 void
 e_eor ()
 {
-    a ^= r;
+    a = a ^ r;
     e_arith_flags (a);
 }
 
@@ -244,7 +242,7 @@ void
 e_asl ()
 {
     c = r & 0x80;
-    r <<= 1;
+    r = r << 1;
     e_arith_flags (r);
 }
 
@@ -252,7 +250,7 @@ void
 e_lsr ()
 {
     c = r & 0x01;
-    r >>= 1;
+    r = r >> 1;
     e_arith_flags (r);
 }
 
