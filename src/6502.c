@@ -288,7 +288,7 @@ void
 e_bit ()
 {
     v = r & 0x40;
-    e_arith_flags (r);
+    e_arith_flags (a & r);
 }
 
 void
