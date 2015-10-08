@@ -216,21 +216,21 @@ e_sbc ()
 void
 e_and ()
 {
-    a = a & r;
+    a &= r;
     e_arith_flags (a);
 }
 
 void
 e_ora ()
 {
-    a = a | r;
+    a |= r;
     e_arith_flags (a);
 }
 
 void
 e_eor ()
 {
-    a = a ^ r;
+    a ^= r;
     e_arith_flags (a);
 }
 
@@ -243,7 +243,7 @@ void
 e_asl ()
 {
     c = r & 0x80;
-    r = r << 1;
+    r <<= 1;
     e_arith_flags (r);
 }
 
@@ -251,7 +251,7 @@ void
 e_lsr ()
 {
     c = r & 0x01;
-    r = r >> 1;
+    r >>= 1;
     e_arith_flags (r);
 }
 
