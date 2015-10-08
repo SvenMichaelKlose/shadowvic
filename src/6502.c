@@ -75,12 +75,13 @@ e_accu ()
 
 void e_imm ()  { r = e_fetch_byte (); }
 void e_zp ()   { r = e_get_operand (e_fetch_byte ()); }
-void e_zpx ()  { r = e_get_operand (e_fetch_byte () + x); }
+void e_zpx ()  { r = e_get_operand ((e_fetch_byte () + x) & 0xff); }
+void e_zpy ()  { r = e_get_operand ((e_fetch_byte () + y) & 0xff); } /* TODO: Implement LDX/STX zp,Y */
 void e_abs ()  { r = e_get_operand (e_fetch_word ()); }
 void e_absx () { r = e_get_operand (e_fetch_word () + x); }
 void e_absy () { r = e_get_operand (e_fetch_word () + y); }
-void e_izpx () { r = e_get_operand (e_get_word (e_fetch_byte () + x)); }
-void e_izpy () { r = e_get_operand (e_get_word (e_fetch_byte ()) + y); }
+void e_izpx () { r = e_get_operand (e_get_word ((e_fetch_byte () + x) & 0xff); }
+void e_izpy () { r = e_get_operand (e_get_word ((e_fetch_byte () + y) & 0xff); }
 void e_indi () { operand = e_get_word (e_fetch_word ()); }
 
 void
