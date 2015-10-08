@@ -138,7 +138,6 @@ e_get_flags ()
            (z ? FLAG_Z : 0) +
            (i ? FLAG_I : 0) +
            (d ? FLAG_D : 0) +
-           (b ? FLAG_B : 0) +
            32 +
            (v ? FLAG_V : 0) +
            (n ? FLAG_N : 0);
@@ -152,7 +151,6 @@ e_set_flags (byte f)
     if (f & FLAG_Z) z = 1;
     if (f & FLAG_I) i = 1;
     if (f & FLAG_D) d = 1;
-    if (f & FLAG_B) b = 1;
     if (f & FLAG_V) v = 1;
     if (f & FLAG_N) n = 1;
 }
