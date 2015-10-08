@@ -52,12 +52,13 @@ void
 disassemble (FILE * f, address pc)
 {
     struct instruction * i = &opcode_map[m[pc]];
-    struct operand_string * s = operand_strings;
+    struct operand_string * o = operand_strings;
+    byte sp = s;
 
     fprintf (f, "$%04hx: %s ", pc, i->mnemonic);
 
-    print_operand_string (f, s++, i->addrmode);
-    print_operand_string (f, s++, i->addrmode);
+    print_operand_string (f, o++, i->addrmode);
+    print_operand_string (f, o++, i->addrmode);
 
     if (i->addrmode & BYTE_AMS)
         fprintf (f, "$%02hx", m[pc + 1]);
@@ -66,7 +67,12 @@ disassemble (FILE * f, address pc)
     else if (i->addrmode & AM_BRANCH)
         fprintf (f, "$%04hx", pc + 2 + (char) m[pc + 1]);
 
-    while (print_operand_string (f, s++, i->addrmode));
+    while (print_operand_string (f, o++, i->addrmode));
+
+#ifdef STACKDUMP
+    while (sp < 0xff)
+        fprintf (f, " $%02hx", m[++sp + 0x100]);
+#endif
 
     fprintf (f, "\n");
 }
