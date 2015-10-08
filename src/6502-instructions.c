@@ -611,9 +611,9 @@ e_sta_zpx ()
 }
 
 void
-e_stx_zpx ()
+e_stx_zpy ()
 {
-    e_zpx ();
+    e_zpy ();
     e_stx ();
     e_writeback ();
 }
@@ -773,9 +773,9 @@ e_lda_zpx ()
 }
 
 void
-e_ldx_zpx ()
+e_ldx_zpy ()
 {
-    e_zpx ();
+    e_zpy ();
     e_ldx ();
 }
 
@@ -1088,4 +1088,4 @@ e_inc_absx ()
 }
 
 typedef void (*instruction) (void);
-instruction instructions[256] = {e_brk_accu, e_ora_izpx, e_ill, e_ill, e_ill, e_ora_zp, e_asl_zp, e_ill, e_php_accu, e_ora_imm, e_asl_accu, e_ill, e_ill, e_ora_abs, e_asl_abs, e_ill, e_bpl_branch, e_ora_izpy, e_ill, e_ill, e_ill, e_ora_zpx, e_asl_zpx, e_ill, e_clc_accu, e_ora_absy, e_ill, e_ill, e_ill, e_ora_absx, e_asl_absx, e_ill, e_jsr_abs, e_and_izpx, mos6502_jam, e_ill, e_bit_zp, e_and_zp, e_rol_zp, e_ill, e_plp_accu, e_and_imm, e_rol_accu, e_ill, e_bit_abs, e_and_abs, e_rol_abs, e_ill, e_bmi_branch, e_and_izpy, e_ill, e_ill, e_ill, e_and_zpx, e_rol_zpx, e_ill, e_sec_accu, e_and_absy, e_ill, e_ill, e_ill, e_and_absx, e_rol_absx, e_ill, e_rti_accu, e_eor_izpx, e_ill, e_ill, e_ill, e_eor_zp, e_lsr_zp, e_ill, e_pha_accu, e_eor_imm, e_lsr_accu, e_ill, e_jmp_abs, e_eor_abs, e_lsr_abs, e_ill, e_bvc_branch, e_eor_izpy, e_ill, e_ill, e_ill, e_eor_zpx, e_lsr_zpx, e_ill, e_cli_accu, e_eor_absy, e_ill, e_ill, e_ill, e_eor_absx, e_lsr_absx, e_ill, e_rts_accu, e_adc_izpx, e_ill, e_ill, e_ill, e_adc_zp, e_ror_zp, e_ill, e_pla_accu, e_adc_imm, e_ror_accu, e_ill, e_jmp_indi, e_adc_abs, e_ror_abs, e_ill, e_bvs_branch, e_adc_izpy, e_ill, e_ill, e_ill, e_adc_zpx, e_ror_zpx, e_ill, e_sei_accu, e_adc_absy, e_ill, e_ill, e_ill, e_adc_absx, e_ror_absx, e_ill, e_ill, e_sta_izpx, e_ill, e_ill, e_sty_zp, e_sta_zp, e_stx_zp, e_ill, e_dey_accu, e_ill, e_txa_accu, e_ill, e_sty_abs, e_sta_abs, e_stx_abs, e_ill, e_bcc_branch, e_sta_izpy, e_ill, e_ill, e_sty_zpx, e_sta_zpx, e_stx_zpx, e_ill, e_tya_accu, e_sta_absy, e_txs_accu, e_ill, e_sty_absx, e_sta_absx, e_stx_absy, e_ill, e_ldy_imm, e_lda_izpx, e_ldx_imm, e_ill, e_ldy_zp, e_lda_zp, e_ldx_zp, e_ill, e_tay_accu, e_lda_imm, e_tax_accu, e_ill, e_ldy_abs, e_lda_abs, e_ldx_abs, e_ill, e_bcs_branch, e_lda_izpy, e_ill, e_ill, e_ldy_zpx, e_lda_zpx, e_ldx_zpx, e_ill, e_clv_accu, e_lda_absy, e_tsx_accu, e_ill, e_ldy_absx, e_lda_absx, e_ldx_absy, e_ill, e_cpy_imm, e_cmp_izpx, e_ill, e_ill, e_cpy_zp, e_cmp_zp, e_dec_zp, e_ill, e_iny_accu, e_cmp_imm, e_dex_accu, e_ill, e_cpy_abs, e_cmp_abs, e_dec_abs, e_ill, e_bne_branch, e_cmp_izpy, e_ill, e_ill, e_ill, e_cmp_zpx, e_dec_zpx, e_ill, e_cld_accu, e_cmp_absy, e_ill, e_ill, e_ill, e_cmp_absx, e_dec_absx, e_ill, e_cpx_imm, e_sbc_izpx, e_ill, e_ill, e_cpx_zp, e_sbc_zp, e_inc_zp, e_ill, e_inx_accu, e_sbc_imm, e_nop_accu, e_ill, e_cpx_abs, e_sbc_abs, e_inc_abs, e_ill, e_beq_branch, e_sbc_izpy, e_ill, e_ill, e_ill, e_sbc_zpx, e_inc_zpx, e_ill, e_sed_accu, e_sbc_absy, e_ill, e_ill, e_ill, e_sbc_absx, e_inc_absx, e_ill};
+instruction instructions[256] = {e_brk_accu, e_ora_izpx, e_ill, e_ill, e_ill, e_ora_zp, e_asl_zp, e_ill, e_php_accu, e_ora_imm, e_asl_accu, e_ill, e_ill, e_ora_abs, e_asl_abs, e_ill, e_bpl_branch, e_ora_izpy, e_ill, e_ill, e_ill, e_ora_zpx, e_asl_zpx, e_ill, e_clc_accu, e_ora_absy, e_ill, e_ill, e_ill, e_ora_absx, e_asl_absx, e_ill, e_jsr_abs, e_and_izpx, mos6502_jam, e_ill, e_bit_zp, e_and_zp, e_rol_zp, e_ill, e_plp_accu, e_and_imm, e_rol_accu, e_ill, e_bit_abs, e_and_abs, e_rol_abs, e_ill, e_bmi_branch, e_and_izpy, e_ill, e_ill, e_ill, e_and_zpx, e_rol_zpx, e_ill, e_sec_accu, e_and_absy, e_ill, e_ill, e_ill, e_and_absx, e_rol_absx, e_ill, e_rti_accu, e_eor_izpx, e_ill, e_ill, e_ill, e_eor_zp, e_lsr_zp, e_ill, e_pha_accu, e_eor_imm, e_lsr_accu, e_ill, e_jmp_abs, e_eor_abs, e_lsr_abs, e_ill, e_bvc_branch, e_eor_izpy, e_ill, e_ill, e_ill, e_eor_zpx, e_lsr_zpx, e_ill, e_cli_accu, e_eor_absy, e_ill, e_ill, e_ill, e_eor_absx, e_lsr_absx, e_ill, e_rts_accu, e_adc_izpx, e_ill, e_ill, e_ill, e_adc_zp, e_ror_zp, e_ill, e_pla_accu, e_adc_imm, e_ror_accu, e_ill, e_jmp_indi, e_adc_abs, e_ror_abs, e_ill, e_bvs_branch, e_adc_izpy, e_ill, e_ill, e_ill, e_adc_zpx, e_ror_zpx, e_ill, e_sei_accu, e_adc_absy, e_ill, e_ill, e_ill, e_adc_absx, e_ror_absx, e_ill, e_ill, e_sta_izpx, e_ill, e_ill, e_sty_zp, e_sta_zp, e_stx_zp, e_ill, e_dey_accu, e_ill, e_txa_accu, e_ill, e_sty_abs, e_sta_abs, e_stx_abs, e_ill, e_bcc_branch, e_sta_izpy, e_ill, e_ill, e_sty_zpx, e_sta_zpx, e_stx_zpy, e_ill, e_tya_accu, e_sta_absy, e_txs_accu, e_ill, e_sty_absx, e_sta_absx, e_stx_absy, e_ill, e_ldy_imm, e_lda_izpx, e_ldx_imm, e_ill, e_ldy_zp, e_lda_zp, e_ldx_zp, e_ill, e_tay_accu, e_lda_imm, e_tax_accu, e_ill, e_ldy_abs, e_lda_abs, e_ldx_abs, e_ill, e_bcs_branch, e_lda_izpy, e_ill, e_ill, e_ldy_zpx, e_lda_zpx, e_ldx_zpy, e_ill, e_clv_accu, e_lda_absy, e_tsx_accu, e_ill, e_ldy_absx, e_lda_absx, e_ldx_absy, e_ill, e_cpy_imm, e_cmp_izpx, e_ill, e_ill, e_cpy_zp, e_cmp_zp, e_dec_zp, e_ill, e_iny_accu, e_cmp_imm, e_dex_accu, e_ill, e_cpy_abs, e_cmp_abs, e_dec_abs, e_ill, e_bne_branch, e_cmp_izpy, e_ill, e_ill, e_ill, e_cmp_zpx, e_dec_zpx, e_ill, e_cld_accu, e_cmp_absy, e_ill, e_ill, e_ill, e_cmp_absx, e_dec_absx, e_ill, e_cpx_imm, e_sbc_izpx, e_ill, e_ill, e_cpx_zp, e_sbc_zp, e_inc_zp, e_ill, e_inx_accu, e_sbc_imm, e_nop_accu, e_ill, e_cpx_abs, e_sbc_abs, e_inc_abs, e_ill, e_beq_branch, e_sbc_izpy, e_ill, e_ill, e_ill, e_sbc_zpx, e_inc_zpx, e_ill, e_sed_accu, e_sbc_absy, e_ill, e_ill, e_ill, e_sbc_absx, e_inc_absx, e_ill};

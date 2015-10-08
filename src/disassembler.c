@@ -10,13 +10,14 @@
 #define AM_IMM  2
 #define AM_ZP   4
 #define AM_ZPX  8
-#define AM_ABS  16
-#define AM_ABSX 32
-#define AM_ABSY 64
-#define AM_IZPX 128
-#define AM_IZPY 256
-#define AM_INDI 512
-#define AM_BRANCH 1024
+#define AM_ZPY  16
+#define AM_ABS  32
+#define AM_ABSX 64
+#define AM_ABSY 128
+#define AM_IZPX 256
+#define AM_IZPY 512
+#define AM_INDI 1024
+#define AM_BRANCH 2048
 
 #define BYTE_AMS (AM_IMM | AM_ZP | AM_ZPX | AM_IZPX | AM_IZPY)
 #define WORD_AMS (AM_ABS | AM_ABSX | AM_ABSY | AM_INDI)
@@ -33,7 +34,7 @@ struct operand_string {
     { ")", AM_IZPY },
     { ",", AM_ZPX + AM_IZPX + AM_IZPY + AM_ABSX + AM_ABSY },
     { "x", AM_ZPX + AM_IZPX + AM_ABSX },
-    { "y", AM_IZPY + AM_ABSY },
+    { "y", AM_ZPY + AM_IZPY + AM_ABSY },
     { ")", AM_IZPX + AM_INDI },
     { NULL, 0 }
 };

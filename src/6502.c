@@ -82,6 +82,7 @@ e_accu ()
 void e_imm ()  { r = e_fetch_byte (); }
 void e_zp ()   { r = e_get_operand (e_fetch_byte ()); }
 void e_zpx ()  { r = e_get_operand ((e_fetch_byte () + x) & 0xff); }
+void e_zpy ()  { r = e_get_operand ((e_fetch_byte () + y) & 0xff); }
 void e_abs ()  { r = e_get_operand (e_fetch_word ()); }
 void e_absx () { r = e_get_operand (e_fetch_word () + x); }
 void e_absy () { r = e_get_operand (e_fetch_word () + y); }
