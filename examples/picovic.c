@@ -24,7 +24,7 @@ main (int argc, char * argv[])
         .frame_interceptor = NULL
     };
 
-    printf ("shadowVIC – https://github.com/SvenMichaelKlose/shadowvic/");
+    printf ("picoVIC – https://github.com/SvenMichaelKlose/shadowvic/\n");
 
     joystick_open ();
     video_open ();
