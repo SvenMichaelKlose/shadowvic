@@ -10,7 +10,9 @@
 #define FLAG_C  1
 #define FLAG_Z  2
 #define FLAG_I  4
+#ifndef CPU_2A03
 #define FLAG_D  8
+#endif
 #define FLAG_B  16
 #define FLAG_V  64
 #define FLAG_N  128
@@ -137,7 +139,9 @@ e_get_flags ()
     return (c ? FLAG_C : 0) +
            (z ? FLAG_Z : 0) +
            (i ? FLAG_I : 0) +
+#ifndef CPU_2A03
            (d ? FLAG_D : 0) +
+#endif
            32 +
            (v ? FLAG_V : 0) +
            (n ? FLAG_N : 0);
@@ -150,7 +154,9 @@ e_set_flags (byte f)
     if (f & FLAG_C) c = 1;
     if (f & FLAG_Z) z = 1;
     if (f & FLAG_I) i = 1;
+#ifndef CPU_2A03
     if (f & FLAG_D) d = 1;
+#endif
     if (f & FLAG_V) v = 1;
     if (f & FLAG_N) n = 1;
 }
@@ -192,6 +198,7 @@ void
 e_adc ()
 {
     address x;
+#ifndef CPU_2A03
     if (d) {
         c = 0;
         x = (a & 0x0f) + (r & 0x0f);
@@ -203,21 +210,26 @@ e_adc ()
             c = 1;
         }
     } else {
+#endif
         x = a + r + (c ? 1 : 0);
         v = (a ^ r) & (a ^ x) & 0x80;
         c = 0xff < x ? 1 : 0;
         a = x;
+#ifndef CPU_2A03
     }
+#endif
     e_arith_flags (a);
 }
 
 void
 e_sbc ()
 {
+#ifndef CPU_2A03
     if (d) {
         c = 0;
         r -= 0x66;
     } else
+#endif
         r ^= 0xff;
     e_adc ();
 }
