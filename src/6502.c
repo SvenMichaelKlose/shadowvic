@@ -177,17 +177,34 @@ void e_iny () { e_arith_flags (++y); }
 void
 e_adc ()
 {
-    address x = a + r + (c ? 1 : 0);
-    v = (a ^ r) & (a ^ x) & 0x80;
-    c = 0xff < x ? 1 : 0;
-    a = x;
+    address x;
+    if (d) {
+        c = 0;
+        x = (a & 0x0f) + (r & 0x0f);
+        if (x > 0x09)
+            x += 0x06;
+        x += (a & 0xf0) + (r & 0xf0);
+        if (x > 0x90) {
+            x += 0x60;
+            c = 1;
+        }
+    } else {
+        x = a + r + (c ? 1 : 0);
+        v = (a ^ r) & (a ^ x) & 0x80;
+        c = 0xff < x ? 1 : 0;
+        a = x;
+    }
     e_arith_flags (a);
 }
 
 void
 e_sbc ()
 {
-    r = r ^ 0xff;
+    if (d) {
+        c = 0;
+        r -= 0x66;
+    } else
+        r ^= 0xff;
     e_adc ();
 }
 
