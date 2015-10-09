@@ -175,7 +175,8 @@ void e_iny () { e_arith_flags (++y); }
 void
 e_adc ()
 {
-    byte e;
+    address e;
+
 #ifndef CPU_2A03
     if (d) {
         c = 0;
