@@ -72,21 +72,21 @@ mos6502_jam ()
             ra = mos6502_fetch_byte ();
             rx = mos6502_fetch_byte ();
             ry = mos6502_fetch_byte ();
-            printf ("result: a: %d x: %d y: %d – wanted: a: %d x: %d y: %d\n", a, x, y, ra, rx, ry);
+            printf ("result: a: $%02hx x: $%02hx y: $%02hx – wanted: a: $%02hx x: $%02hx y: $%02hx\n", a, x, y, ra, rx, ry);
             if (a !=ra || x != rx || y != ry) {
                 printf ("Emulator test result failed.\n");
                 vic20_stop ();
             }
             break;
         case X_EXIT:
-            printf ("Emulator escape code exit at %d.\n", pc);
+            printf ("Emulator escape code exit at $%04hx.\n", pc);
             mos6502_fetch_byte ();  /* Use as argument to exit(). */
             vic20_stop ();
         case X_UPDATE:
             screen_update ();
             break;
         default:
-            printf ("Illegal emulator escape code %d at %d.\n", in, pc);
+            printf ("Illegal emulator escape code $%02hx at $%04hx.\n", in, pc);
             vic20_stop ();
     }
 }
