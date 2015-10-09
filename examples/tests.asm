@@ -5,18 +5,42 @@
     jsr clr
     $22 0 "Test starts." 0 0 0 0
 
+    lda #1
+    tay
+    tax
+    $22 0 "TAY/TAX" 0 1 1 1
+
+    jsr clr
+    ldx #2
+    txa
+    $22 0 "TXA" 0 2 2 0
+
+    jsr clr
+    ldy #3
+    tya
+    $22 0 "TYA" 0 3 0 3
+
+    jsr clr
+    ldx #$90
+    txs
+    pla
+    tsx
+    lda #$04
+    $22 0 "TXS/TSX" 0 $04 $91 0
+
+    jsr clr
     adc #1
-    $22 0 "adc #1 without carry" 0 1 0 0
+    $22 0 "ADC #1 without carry" 0 1 0 0
     sec
     adc #0
-    $22 0 "adc #1 with carry" 0 2 0 0
+    $22 0 "ADC #1 with carry" 0 2 0 0
 
     sec
     sbc #1
-    $22 0 "sbc #1 with carry" 0 1 0 0
+    $22 0 "SBC #1 with carry" 0 1 0 0
     clc
     sbc #1
-    $22 0 "sbc #1 without carry" 0 255 0 0
+    $22 0 "SBC #1 without carry" 0 255 0 0
 
     ; Load immediate
     lda #10
@@ -78,13 +102,6 @@
     $22 0 "ROR" 0 $80 0 0
     ror
     $22 0 "ROR" 0 $40 0 0
-
-    jsr clr
-    lda #$ff
-    clc
-    adc #2
-    adc #0
-    $22 0 "ADC with carry" 0 $02 0 0
 
     jsr clr
     lda #$1
@@ -211,6 +228,28 @@ n:
     lda #1
 n:
     $22 0 "CMP BCS" 0 10 0 0
+
+    jsr clr
+    lda #$00
+    sta $00
+    lda #$3f
+    bit $00
+    bmi +n
+    ldy #1
+    bvc +ok
+n:  ldx #1
+ok: $22 0 "BIT with N or V flag clear" 0 $3f 0 1
+
+    jsr clr
+    lda #$ff
+    sta $00
+    lda #$c0
+    bit $00
+    bpl +n
+    ldy #1
+    bvs +ok
+n:  ldx #1
+ok: $22 0 "BIT with N or V flag set" 0 $c0 0 1
 
     ; Exit emulator.
     $22 1 255
