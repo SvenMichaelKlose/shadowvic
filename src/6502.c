@@ -48,28 +48,12 @@ byte opcode;
 
 byte m[65536];
 
-byte e_fetch_byte () { return m[pc++]; }
-byte mos6502_fetch_byte () { return e_fetch_byte (); }
+byte e_fetch_byte ()        { return m[pc++]; }
+byte mos6502_fetch_byte ()  { return e_fetch_byte (); }
+address e_fetch_word ()     { return e_fetch_byte () + (e_fetch_byte () << 8); }
 
-address
-e_fetch_word ()
-{
-    byte l = e_fetch_byte ();
-    byte h = e_fetch_byte ();
-    return l + (h << 8);
-}
-
-address
-e_get_word (address e)
-{
-    return m[e] + (m[e + 1] << 8);
-}
-
-address
-e_get_zp_word (address e)
-{
-    return m[e] + (m[(e + 1) & 0xff] << 8);
-}
+address e_get_word (address e)    { return m[e] + (m[e + 1] << 8); }
+address e_get_zp_word (address e) { return m[e] + (m[(e + 1) & 0xff] << 8); }
 
 
 /*
@@ -79,8 +63,7 @@ e_get_zp_word (address e)
 byte
 e_get_operand (address e)
 {
-    operand = e;
-    return m[operand];
+    return m[operand = e];
 }
 
 void
