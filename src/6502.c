@@ -261,7 +261,7 @@ e_eor ()
 
 
 /*
- * Shift
+ * Shifting
  */
 
 void
@@ -300,7 +300,7 @@ e_ror ()
 
 
 /*
- * Compare
+ * Comparing
  */
 
 void
