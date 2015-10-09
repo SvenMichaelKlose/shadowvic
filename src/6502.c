@@ -60,15 +60,15 @@ e_fetch_word ()
 }
 
 address
-e_get_word (address x)
+e_get_word (address e)
 {
-    return m[x] + (m[x + 1] << 8);
+    return m[e] + (m[e + 1] << 8);
 }
 
 address
-e_get_zp_word (address x)
+e_get_zp_word (address e)
 {
-    return m[x] + (m[(x + 1) & 0xff] << 8);
+    return m[e] + (m[(e + 1) & 0xff] << 8);
 }
 
 
@@ -77,9 +77,9 @@ e_get_zp_word (address x)
  */
 
 byte
-e_get_operand (address a)
+e_get_operand (address e)
 {
-    operand = a;
+    operand = e;
     return m[operand];
 }
 
@@ -104,8 +104,8 @@ void e_indi () { operand = e_get_word (e_fetch_word ()); }
 void
 e_branch ()
 {
-    int x = e_fetch_byte ();
-    r = pc + ((128 <= x) ? x - 256 : x);
+    int e = e_fetch_byte ();
+    r = pc + ((128 <= e) ? e - 256 : e);
 }
 
 void
@@ -162,10 +162,10 @@ e_set_flags (byte f)
 }
 
 void
-e_arith_flags (byte x)
+e_arith_flags (byte e)
 {
-    n = x & 0x80;
-    z = !x;
+    n = e & 0x80;
+    z = !e;
 }
 
 
@@ -197,24 +197,24 @@ void e_iny () { e_arith_flags (++y); }
 void
 e_adc ()
 {
-    address x;
+    address e;
 #ifndef CPU_2A03
     if (d) {
         c = 0;
-        x = (a & 0x0f) + (r & 0x0f);
-        if (x > 0x09)
-            x += 0x06;
-        x += (a & 0xf0) + (r & 0xf0);
-        if (x > 0x90) {
-            x += 0x60;
+        e = (a & 0x0f) + (r & 0x0f);
+        if (e > 0x09)
+            e += 0x06;
+        e += (a & 0xf0) + (r & 0xf0);
+        if (e > 0x90) {
+            e += 0x60;
             c = 1;
         }
     } else {
 #endif
-        x = a + r + (c ? 1 : 0);
-        v = (a ^ r) & (a ^ x) & 0x80;
-        c = 0xff < x ? 1 : 0;
-        a = x;
+        e = a + r + (c ? 1 : 0);
+        v = (a ^ r) & (a ^ e) & 0x80;
+        c = 0xff < e ? 1 : 0;
+        a = e;
 #ifndef CPU_2A03
     }
 #endif
@@ -311,9 +311,9 @@ e_bit ()
 }
 
 void
-e_cmp_shared (byte a)
+e_cmp_shared (byte o)
 {
-    int diff = a - r;
+    int diff = o - r;
     n = diff & 0x80;
     z = !diff;
     c = 0 <= diff;
@@ -329,9 +329,9 @@ void e_cpy () { e_cmp_shared (y); }
  */
 
 void
-e_push (byte x)
+e_push (byte o)
 {
-    m[s + 0x100] = x;
+    m[s + 0x100] = o;
     s--;
 }
 
@@ -393,7 +393,7 @@ void e_rts () { e_pop_pc (); }
  * Conditional
  */
 
-void e_cond (byte x) { if (x) pc = r; }
+void e_cond (byte o) { if (o) pc = r; }
 void e_bne () { e_cond (!z); }
 void e_beq () { e_cond (z); }
 void e_bcc () { e_cond (!c); }
