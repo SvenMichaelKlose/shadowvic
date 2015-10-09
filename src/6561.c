@@ -153,7 +153,7 @@ vic_draw_border ()
 void
 vic_get_colors ()
 {
-    background_color = m[0x900f] >> 5;
+    background_color = m[0x900f] >> 4;
     border_color = m[0x900f] & 7;
     auxiliary_color = m[0x900e] >> 4;
 }
