@@ -55,6 +55,18 @@ address e_fetch_word ()     { return e_fetch_byte () + (e_fetch_byte () << 8); }
 address e_get_word (address e)    { return m[e] + (m[e + 1] << 8); }
 address e_get_zp_word (address e) { return m[e] + (m[(e + 1) & 0xff] << 8); }
 
+void
+e_writeback ()
+{
+    if (operand >= 0xc000 || (operand >= 0x8000 && operand < 0x9000))
+        return;
+    if (operand_is_accu) {
+        a = r;
+        operand_is_accu = FALSE;
+    } else
+        m[operand] = r;
+}
+
 
 /*
  * Addressing modes
@@ -84,18 +96,6 @@ e_branch ()
 {
     int e = e_fetch_byte ();
     r = pc + ((128 <= e) ? e - 256 : e);
-}
-
-void
-e_writeback ()
-{
-    if (operand >= 0xc000 || (operand >= 0x8000 && operand < 0x9000))
-        return;
-    if (operand_is_accu) {
-        a = r;
-        operand_is_accu = FALSE;
-    } else
-        m[operand] = r;
 }
 
 
