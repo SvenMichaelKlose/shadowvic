@@ -329,7 +329,7 @@ void
 e_jsr ()
 {
     e_push_pc ();
-    pc = operand;
+    e_jmp ();
 }
 
 
