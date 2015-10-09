@@ -72,9 +72,9 @@ mos6502_jam ()
             ra = mos6502_fetch_byte ();
             rx = mos6502_fetch_byte ();
             ry = mos6502_fetch_byte ();
-            printf ("a: %d x: %d y: %d – a: %d x: %d y: %d\n", a, x, y, ra, rx, ry);
+            printf ("result: a: %d x: %d y: %d – wanted: a: %d x: %d y: %d\n", a, x, y, ra, rx, ry);
             if (a !=ra || x != rx || y != ry) {
-                printf ("Emulator test failed.\n");
+                printf ("Emulator test result failed.\n");
                 vic20_stop ();
             }
             break;
