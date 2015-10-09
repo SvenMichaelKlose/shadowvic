@@ -252,16 +252,14 @@ void
 e_asl ()
 {
     c = r & 0x80;
-    r <<= 1;
-    e_arith_flags (r);
+    e_arith_flags (r <<= 1);
 }
 
 void
 e_lsr ()
 {
     c = r & 0x01;
-    r >>= 1;
-    e_arith_flags (r);
+    e_arith_flags (r >>= 1);
 }
 
 void
@@ -298,8 +296,7 @@ void
 e_cmp_shared (byte o)
 {
     int diff = o - r;
-    n = diff & 0x80;
-    z = !diff;
+    e_arith_flags (diff);
     c = 0 <= diff;
 }
 
