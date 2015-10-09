@@ -234,30 +234,14 @@ e_sbc ()
     e_adc ();
 }
 
+
 /*
  * Logical
  */
 
-void
-e_and ()
-{
-    a &= r;
-    e_arith_flags (a);
-}
-
-void
-e_ora ()
-{
-    a |= r;
-    e_arith_flags (a);
-}
-
-void
-e_eor ()
-{
-    a ^= r;
-    e_arith_flags (a);
-}
+void e_and () { e_arith_flags (a &= r); }
+void e_ora () { e_arith_flags (a |= r); }
+void e_eor () { e_arith_flags (a ^= r); }
 
 
 /*
@@ -331,15 +315,13 @@ void e_cpy () { e_cmp_shared (y); }
 void
 e_push (byte o)
 {
-    m[s + 0x100] = o;
-    s--;
+    m[s-- + 0x100] = o;
 }
 
 byte
 e_pop ()
 {
-    s++;
-    return m[s + 0x100];
+    return m[++s + 0x100];
 }
 
 void e_pha () { e_push (a); }
