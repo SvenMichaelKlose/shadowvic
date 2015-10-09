@@ -49,7 +49,9 @@ screen_update ()
 {
     vic_video (video_width (), video_height ());
     call_frame_interceptor ();
+#ifndef SHADOWVIC_NO_VIDEO_COMMIT
     video_commit ();
+#endif
     sync_frame ();
 }
 
