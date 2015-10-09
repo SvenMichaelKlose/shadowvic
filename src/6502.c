@@ -175,7 +175,7 @@ void e_iny () { e_arith_flags (++y); }
 void
 e_adc ()
 {
-    address e;
+    byte e;
 #ifndef CPU_2A03
     if (d) {
         c = 0;
@@ -192,11 +192,10 @@ e_adc ()
         e = a + r + (c ? 1 : 0);
         v = (a ^ r) & (a ^ e) & 0x80;
         c = 0xff < e ? 1 : 0;
-        a = e;
 #ifndef CPU_2A03
     }
 #endif
-    e_arith_flags (a);
+    e_arith_flags (a = e);
 }
 
 void
@@ -245,8 +244,7 @@ e_rol ()
 {
     byte old_c = c;
     c = r & 0x80;
-    r = (r << 1) | (old_c ? 1 : 0);
-    e_arith_flags (r);
+    e_arith_flags (r = (r << 1) | (old_c ? 1 : 0));
 }
 
 void
@@ -254,8 +252,7 @@ e_ror ()
 {
     byte old_c = c;
     c = r & 0x01;
-    r = (r >> 1) | (old_c ? 128 : 0);
-    e_arith_flags (r);
+    e_arith_flags (r = (r >> 1) | (old_c ? 128 : 0));
 }
 
 
