@@ -89,10 +89,11 @@ byte auxiliary_color;
 byte
 vic_color_index (byte x, byte c)
 {
+    byte is_reverse = m[0x900f] & 16;
     switch (x) {
-        case 0: return background_color;
+        case 0: return is_reverse ? c : background_color;
         case 1: return border_color;
-        case 2: return c;
+        case 2: return is_reverse ? background_color : c;
     }
     return auxiliary_color;
 }
