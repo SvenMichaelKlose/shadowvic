@@ -57,14 +57,8 @@ address e_get_zp_word (address e) { return m[e] + (m[(e + 1) & 0xff] << 8); }
 
 
 /*
- * Operands
+ * Addressing modes
  */
-
-byte
-e_get_operand (address e)
-{
-    return m[operand = e];
-}
 
 void
 e_accu ()
@@ -73,6 +67,7 @@ e_accu ()
     r = a;
 }
 
+byte e_get_operand (address e) { return m[operand = e]; }
 void e_imm ()  { r = e_fetch_byte (); }
 void e_zp ()   { r = e_get_operand (e_fetch_byte ()); }
 void e_zpx ()  { r = e_get_operand ((e_fetch_byte () + x) & 0xff); }
@@ -292,17 +287,8 @@ void e_cpy () { e_cmp_shared (y); }
  * Stack
  */
 
-void
-e_push (byte o)
-{
-    m[s-- + 0x100] = o;
-}
-
-byte
-e_pop ()
-{
-    return m[++s + 0x100];
-}
+void e_push (byte o) { m[s-- + 0x100] = o; }
+byte e_pop ()        { return m[++s + 0x100]; }
 
 void e_pha () { e_push (a); }
 void e_pla () { a = e_pop (); }
@@ -336,7 +322,7 @@ e_push_pc ()
 }
 
 void
-e_pop_pc ()
+e_rts ()
 {
     pc = e_pop () + (e_pop () << 8);
 }
@@ -347,8 +333,6 @@ e_jsr ()
     e_push_pc ();
     pc = operand;
 }
-
-void e_rts () { e_pop_pc (); }
 
 
 /*
@@ -384,7 +368,7 @@ void
 e_rti ()
 {
     e_plp ();
-    e_pop_pc ();
+    e_rts ();
 }
 
 
