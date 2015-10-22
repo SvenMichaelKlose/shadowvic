@@ -215,7 +215,7 @@ vic20_emulate (unsigned program_start)
         num_instructions++;
         update_rastercount ();
         if (FRAME_IS_COMPLETE()) {
-            if (!config->manual_screen_updates)
+            if (config->manual_screen_updates)
                 screen_update ();
             get_joystick_status ();
             irq ();
