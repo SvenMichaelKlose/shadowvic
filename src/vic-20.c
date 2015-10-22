@@ -237,6 +237,13 @@ set_default_vic_register_values ()
 }
 
 void
+init_vectors ()
+{
+    m[0x314] = m[0x316] = m[0x318] = 0x5b; /* RTI */
+    m[0x315] = m[0x317] = m[0x319] = 0xff;
+}
+
+void
 vic20_open (struct vic20_config * cfg)
 {
     config = cfg;
@@ -247,6 +254,7 @@ vic20_open (struct vic20_config * cfg)
     memcpy (&m[0x8000], &chargen, sizeof (chargen));
     memcpy (&m[0xc000], &basic, sizeof (basic));
     memcpy (&m[0xe000], &kernal, sizeof (kernal));
+    init_vectors ();
     set_default_vic_register_values ();
 }
 
