@@ -215,7 +215,7 @@ vic20_emulate (unsigned program_start)
         num_instructions++;
         update_rastercount ();
         if (FRAME_IS_COMPLETE()) {
-            if (config->manual_screen_updates)
+            if (!config->manual_screen_updates)
                 screen_update ();
             get_joystick_status ();
             irq ();
@@ -239,8 +239,9 @@ set_default_vic_register_values ()
 void
 init_vectors ()
 {
-    m[0x314] = m[0x316] = m[0x318] = 0x5b; /* RTI */
-    m[0x315] = m[0x317] = m[0x319] = 0xff;
+    /* $eb18 is an register-restoring interrupt return in ROM. */
+    m[0x314] = m[0x316] = m[0x318] = 0x18;
+    m[0x315] = m[0x317] = m[0x319] = 0xeb;
 }
 
 void
