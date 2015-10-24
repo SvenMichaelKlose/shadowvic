@@ -242,6 +242,9 @@ init_vectors ()
     /* $eb18 is an register-restoring interrupt return in ROM. */
     m[0x314] = m[0x316] = m[0x318] = 0x18;
     m[0x315] = m[0x317] = m[0x319] = 0xeb;
+    /* NMI: $eb1d is an RTI. */
+    m[0x318] = 0x1d;
+    m[0x319] = 0xeb;
 }
 
 void
