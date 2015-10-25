@@ -55,9 +55,43 @@ screen_update ()
     sync_frame ();
 }
 
+void
+memory_dump (address from, address to)
+{
+    address p = from;
+    address l;
+    byte c;
+    int i;
+
+    printf ("Memory dump from $%04hx to $%04hx:\n", from, to);
+    while (p < to) {
+        printf ("%04hx:", p);
+        l = p;
+        for (i = 0; i < 16; i++) {
+            if (p >= to)
+                break;
+            if (i == 8)
+                printf (" ");
+            printf (" %02hx", m[p++]);
+        }
+        printf ("  ");
+        p = l;
+        for (i = 0; i < 16; i++) {
+            if (p >= to)
+                break;
+            c = m[p++];
+            if (c < 32 || c > 126)
+                c = '.';
+            putc (c, stdout);
+        }
+        printf ("\n");
+    }
+}
+
 #define X_TEST      0
 #define X_EXIT      1
 #define X_UPDATE    2
+#define X_DUMP      3
 
 void
 mos6502_jam ()
@@ -65,6 +99,8 @@ mos6502_jam ()
     byte ra;
     byte rx;
     byte ry;
+    address from;
+    address to;
     byte in = mos6502_fetch_byte ();
 
     switch (in) {
@@ -86,6 +122,11 @@ mos6502_jam ()
             vic20_stop ();
         case X_UPDATE:
             screen_update ();
+            break;
+        case X_DUMP:
+            from = mos6502_fetch_word ();
+            to = mos6502_fetch_word ();
+            memory_dump (from, to);
             break;
         default:
             printf ("Illegal emulator escape code $%02hx at $%04hx.\n", in, pc);
