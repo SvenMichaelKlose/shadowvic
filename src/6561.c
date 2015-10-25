@@ -185,4 +185,9 @@ vic_video (unsigned disp_width, unsigned disp_height)
     vic_get_colors ();
     vic_draw_border ();
     vic_draw_screen ();
+#ifdef DEBUG_VIC
+    printf ("VIC screen: %04hx\n", vic_screen ());
+    printf ("VIC colors: %04hx\n", vic_colors ());
+    printf ("VIC chars:  %04hx\n", vic_charset ());
+#endif
 }
