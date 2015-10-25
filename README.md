@@ -52,6 +52,11 @@ configure it like this:
 ./configure CPPFLAGS="-DDISASSEMBLE"
 ```
 
+Dumping the VIC 6560/6561 settings on each screen update might
+also be essential:
+```
+./configure CPPFLAGS="-DDISASSEMBLE -DDEBUG_VIC"
+```
 
 # Installing
 
@@ -139,3 +144,12 @@ $22 $02
 
 Makes the emulator update the display and waits to sync
 the output with the frames per second specified.
+
+
+## Memory dump
+
+```
+$22 $03 <from address> <to address>
+```
+
+Dumps the specified address range like hexdump(1).
