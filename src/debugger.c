@@ -9,6 +9,7 @@
 #include "6502.h"
 #include "disassembler.h"
 #include "debugger.h"
+#include "linenoise.h"
 
 #ifndef HISTORY
 #define HISTORY     "shadowvic-debugger.history"
