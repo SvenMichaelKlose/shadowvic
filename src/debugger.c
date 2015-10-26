@@ -69,9 +69,8 @@ void
 disassembly (char * p)
 {
     int i = DISASSEMBLY_LENGTH;
-    address from = next_disassembly_address;
     if (*p)
-        from = strtol (p, NULL, 16);
+        next_disassembly_address = strtol (p, NULL, 16);
 
     while (i--)
         next_disassembly_address = disassemble (stdout, next_disassembly_address);
