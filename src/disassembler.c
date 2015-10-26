@@ -54,7 +54,9 @@ disassemble (FILE * f, address pc)
     struct instruction * i = &opcode_map[m[pc]];
     struct operand_string * o = operand_strings;
     address p = pc;
+#ifdef STACKDUMP
     byte sp = s;
+#endif
 
     fprintf (f, "%04hx: %s ", p, i->mnemonic);
     p++;
