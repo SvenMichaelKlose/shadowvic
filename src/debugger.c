@@ -244,5 +244,10 @@ user_break (int dummy)
 void
 init_debugger ()
 {
-    signal (SIGINT, user_break);
+    struct sigaction action = {
+        .sa_handler = user_break,
+        .sa_flags = 0
+    };
+
+    sigaction (SIGINT, &action, NULL);
 }
