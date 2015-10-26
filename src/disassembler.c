@@ -22,6 +22,36 @@
 #define BYTE_AMS (AM_IMM | AM_ZP | AM_ZPX | AM_IZPX | AM_IZPY)
 #define WORD_AMS (AM_ABS | AM_ABSX | AM_ABSY | AM_INDI)
 
+#include "rom-labels.c"
+
+char *
+get_label (address addr)
+{
+    struct label * p = rom_labels;
+
+    while (p->name) {
+        if (p->addr == addr)
+            return p->name;
+        p++;
+    }
+
+    return NULL;
+}
+
+#define IS_BYTE     FALSE
+#define IS_WORD     TRUE
+
+void
+print_label_or_address (FILE * f, address addr, int is_word)
+{
+    char * l = get_label (addr);
+
+    if (l)
+        fprintf (f, "%s", l);
+    fprintf (f, is_word ? "$%04hx" : "$%02hx", addr);
+}
+
+
 #include "opcode-map.c"
 
 struct operand_string {
@@ -64,13 +94,16 @@ disassemble (FILE * f, address p, int print_linefeed)
     print_operand_string (f, o++, i->addrmode);
 
     if (i->addrmode & BYTE_AMS) {
-        fprintf (f, "$%02hx", m[p]);
+        if (i->addrmode & AM_IMM)
+            fprintf (f, "$%02hx", m[p]);
+        else
+            print_label_or_address (f, m[p], IS_BYTE);
         p++;
     } else if (i->addrmode & WORD_AMS) {
-        fprintf (f, "$%04hx", m[p] + (m[p + 1] << 8));
+        print_label_or_address (f, m[p] + (m[p + 1] << 8), IS_WORD);
         p += 2;
     } else if (i->addrmode & AM_BRANCH) {
-        fprintf (f, "$%04hx", p + 1 + (char) m[p]);
+        print_label_or_address (f, p + 1 + (char) m[p], IS_WORD);
         p++;
     }
 
