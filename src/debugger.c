@@ -175,7 +175,7 @@ dump_flags ()
 int
 dump_registers (char * p)
 {
-    printf ("A: %02hx X: %02hx Y: %02hx S: %02hx PC: %04hx ", a, x, y, s, pc);
+    printf ("A: %02hx X: %02hx Y: %02hx S: %02hx ", a, x, y, s);
     dump_flags ();
     printf ("\n");
 
@@ -295,7 +295,7 @@ debugger_welcome_message ()
 
 void make_prompt (char * prompt)
 {
-    sprintf (prompt, "%04hx> ", next_disassembly_address);
+    sprintf (prompt, "%04hx> ", pc);
 }
 
 char *
