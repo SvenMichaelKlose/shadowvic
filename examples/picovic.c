@@ -9,6 +9,7 @@
 #include "joystick.h"
 #include "video.h"
 #include "sync.h"
+#include "debugger.h"
 
 #define FALSE   0
 #define TRUE    1
@@ -30,6 +31,7 @@ main (int argc, char * argv[])
     video_open ();
     video_map ();
     vic20_open (&config);
+    init_debugger ();
     vic20_emulate (m[0xfffc] + (m[0xfffd] << 8));
     vic20_close ();
     video_close ();
