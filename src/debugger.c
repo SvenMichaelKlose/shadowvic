@@ -62,6 +62,7 @@ memory_dump (address from, address to)
     }
 }
 
+
 address next_disassembly_address = 0;
 
 void
@@ -90,6 +91,19 @@ dump_memory (char * p)
     memory_dump (from, next_memory_dump_address);
 }
 
+
+void
+backtrace (char * p)
+{
+    address sp = s;
+    (void) p;
+
+    printf ("Stack: ");
+    while (sp < 0xff)
+        printf (" $%02hx", m[++sp + 0x100]);
+}
+
+
 void
 exit_shadowvic (char * p)
 {
@@ -99,15 +113,18 @@ exit_shadowvic (char * p)
     exit (255);
 }
 
+
 void
 print_help ()
 {
     printf ("Command overview:\n");
     printf ("d addr  Disassemble %d items at 'addr'.\n", DISASSEMBLY_LENGTH);
     printf ("m addr  Dump 128 bytes of memory at 'addr'.\n");
+    printf ("bt      Stack dump (will get backtrace functionality later).\n");
     printf ("q       Quit shadowVIC.\n");
     printf ("h       Print this help text.\n");
 }
+
 
 struct command {
     char * name;
@@ -115,6 +132,7 @@ struct command {
 } commands[] = {
     { "d",  disassembly },
     { "m",  dump_memory },
+    { "bt", backtrace },
     { "q",  exit_shadowvic },
     { "h",  print_help },
     { NULL, NULL }
