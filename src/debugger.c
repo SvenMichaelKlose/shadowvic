@@ -66,7 +66,7 @@ memory_dump (address from, address to)
 
 address next_disassembly_address = 0;
 
-void
+int
 disassembly (char * p)
 {
     int i = DISASSEMBLY_LENGTH;
@@ -75,6 +75,8 @@ disassembly (char * p)
 
     while (i--)
         next_disassembly_address = disassemble (stdout, next_disassembly_address);
+
+    return FALSE;
 }
 
 
@@ -91,18 +93,20 @@ dump_flags ()
     }
 }
 
-void
+int
 dump_registers (char * p)
 {
     printf ("Registers: A: %02hx X: %02hx Y: %02hx PC: %04hx ", a, x, y, pc);
     dump_flags ();
     printf ("\n");
+
+    return FALSE;
 }
 
 
 address next_memory_dump_address = 0;
 
-void
+int
 dump_memory (char * p)
 {
     address from = next_memory_dump_address;
@@ -111,10 +115,12 @@ dump_memory (char * p)
 
     next_memory_dump_address = from + 128;
     memory_dump (from, next_memory_dump_address);
+
+    return FALSE;
 }
 
 
-void
+int
 backtrace (char * p)
 {
     address sp = s;
@@ -124,35 +130,42 @@ backtrace (char * p)
     while (sp < 0xff)
         printf (" $%02hx", m[++sp + 0x100]);
     printf ("\n");
+
+    return FALSE;
 }
 
 
-void
+int
 exit_shadowvic (char * p)
 {
     (void) p;
 
     printf ("Exiting with code 255 – bye! :)\n");
     exit (255);
+
+    return FALSE;
 }
 
 
-void
+int
 print_help ()
 {
-    printf ("Command overview:\n");
+    printf ("Command overview:\n\n");
+    printf ("Ctrl+d  Continue program.\n");
     printf ("d addr  Disassemble %d items at 'addr'.\n", DISASSEMBLY_LENGTH);
     printf ("r       Show register values and flags.\n");
     printf ("m addr  Dump 128 bytes of memory at 'addr'.\n");
     printf ("bt      Stack dump (will get backtrace functionality later).\n");
     printf ("q       Quit shadowVIC.\n");
     printf ("h       Print this help text.\n");
+
+    return FALSE;
 }
 
 
 struct command {
     char * name;
-    void (*handler) (char * p);
+    int (*handler) (char * p);
 } commands[] = {
     { "d",  disassembly },
     { "r",  dump_registers },
@@ -175,10 +188,11 @@ invoke_command (char * p)
             c++;
             continue;
         }
-        c->handler (skip_whitespace (p + l));
-        return -1;
+        return c->handler (skip_whitespace (p + l));
     }
-    return 0;
+
+    printf ("Unrecognized command. ");
+    return print_help ();
 }
 
 int debugger_was_running = FALSE;
@@ -224,10 +238,8 @@ debugger ()
         linenoiseHistoryAdd (p);
         linenoiseHistorySave (HISTORY);
 
-        if (!invoke_command (p)) {
-            printf ("Unrecognized command. ");
-            print_help ();
-        }
+        if (invoke_command (p))
+            return;
         
         free (line);
     }
