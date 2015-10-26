@@ -24,6 +24,8 @@
 #define DISASSEMBLY_LENGTH  16
 #endif
 
+#define STAY_IN_DEBUGGER        FALSE
+#define RETURN_FROM_DEBUGGER    TRUE
 
 int debugger_break = FALSE;
 int debugger_return_address = -1;
@@ -101,7 +103,7 @@ disassembly (char * p)
     while (i--)
         next_disassembly_address = disassemble (stdout, next_disassembly_address, DO_PRINT_LINEFEED);
 
-    return FALSE;
+    return STAY_IN_DEBUGGER;
 }
 
 
@@ -125,7 +127,7 @@ next_instruction ()
     debugger_return_address = s;
     mos6502_emulate ();
 
-    return TRUE;
+    return RETURN_FROM_DEBUGGER;
 }
 
 
@@ -134,12 +136,12 @@ execute_until (char * p)
 {
     if (!*p) {
         printf ("Address expected where to halt execution.\n");
-        return FALSE;
+        return STAY_IN_DEBUGGER;
     }
 
     debugger_until_address = parse_address (p);
 
-    return TRUE;
+    return RETURN_FROM_DEBUGGER;
 }
 
 
@@ -148,12 +150,12 @@ execute_from (char * p)
 {
     if (!*p) {
         printf ("Address expected where to resume execution.\n");
-        return FALSE;
+        return STAY_IN_DEBUGGER;
     }
 
     pc = parse_address (p);
 
-    return TRUE;
+    return RETURN_FROM_DEBUGGER;
 }
 
 
@@ -177,7 +179,7 @@ dump_registers (char * p)
     dump_flags ();
     printf ("\n");
 
-    return FALSE;
+    return STAY_IN_DEBUGGER;
 }
 
 
@@ -193,7 +195,7 @@ dump_memory (char * p)
     next_memory_dump_address = from + 128;
     memory_dump (from, next_memory_dump_address);
 
-    return FALSE;
+    return STAY_IN_DEBUGGER;
 }
 
 
@@ -208,7 +210,7 @@ backtrace (char * p)
         printf (" $%02hx", m[++sp + 0x100]);
     printf ("\n");
 
-    return FALSE;
+    return STAY_IN_DEBUGGER;
 }
 
 
@@ -220,7 +222,7 @@ exit_shadowvic (char * p)
     printf ("Exiting with code 255 – bye! :)\n");
     exit (255);
 
-    return FALSE;
+    return STAY_IN_DEBUGGER;
 }
 
 
@@ -240,7 +242,7 @@ print_help ()
     printf ("q       Quit shadowVIC.\n");
     printf ("h       Print this help text.\n");
 
-    return FALSE;
+    return STAY_IN_DEBUGGER;
 }
 
 
