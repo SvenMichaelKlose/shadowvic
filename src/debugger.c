@@ -132,11 +132,13 @@ debugger ()
 {
     char * line;
     char * p;
+    char prompt[256];
 
     debugger_welcome_message ();
     linenoiseHistoryLoad (HISTORY);
 
-    while ((line = linenoise ("> ")) != NULL) {
+    sprintf (prompt, "%04hx >", pc);
+    while ((line = linenoise (prompt)) != NULL) {
         p = skip_whitespace (line);
         if (!*p)
             continue;
