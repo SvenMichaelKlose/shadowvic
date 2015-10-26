@@ -8,8 +8,11 @@ extern byte s;
 
 extern byte m[65536];
 
+extern byte mos6502_flags (void);
+
 extern byte mos6502_fetch_byte (void);
 extern address mos6502_fetch_word (void);
+
 extern void mos6502_jam (void);
 
 extern void mos6502_reset (void);

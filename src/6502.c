@@ -126,6 +126,8 @@ e_get_flags ()
            (n ? FLAG_N : 0);
 }
 
+byte mos6502_flags () { e_get_flags (); }
+
 void
 e_set_flags (byte f)
 {

@@ -78,6 +78,28 @@ disassembly (char * p)
 }
 
 
+void
+dump_flags ()
+{
+    const char * flags = "NV.BDIZC";
+    int i;
+    byte f = mos6502_flags ();
+
+    for (i = 0; i < 8; i++) {
+        putc (f & 128 ? flags[i] : '-', stdout);
+        f <<= 1;
+    }
+}
+
+void
+dump_registers (char * p)
+{
+    printf ("Registers: A: %02hx X: %02hx Y: %02hx PC: %04hx ", a, x, y, pc);
+    dump_flags ();
+    printf ("\n");
+}
+
+
 address next_memory_dump_address = 0;
 
 void
@@ -119,6 +141,7 @@ print_help ()
 {
     printf ("Command overview:\n");
     printf ("d addr  Disassemble %d items at 'addr'.\n", DISASSEMBLY_LENGTH);
+    printf ("r       Show register values and flags.\n");
     printf ("m addr  Dump 128 bytes of memory at 'addr'.\n");
     printf ("bt      Stack dump (will get backtrace functionality later).\n");
     printf ("q       Quit shadowVIC.\n");
@@ -131,6 +154,7 @@ struct command {
     void (*handler) (char * p);
 } commands[] = {
     { "d",  disassembly },
+    { "r",  dump_registers },
     { "m",  dump_memory },
     { "bt", backtrace },
     { "q",  exit_shadowvic },
