@@ -25,7 +25,7 @@
 #endif
 
 #define STAY_IN_DEBUGGER        FALSE
-#define RETURN_FROM_DEBUGGER    TRUE
+#define LEAVE_DEBUGGER    TRUE
 
 int debugger_break = FALSE;
 int debugger_return_address = -1;
@@ -110,7 +110,9 @@ disassembly (char * p)
 int
 step_instruction ()
 {
-    return debugger_break = TRUE;
+    debugger_break = TRUE;
+
+    return LEAVE_DEBUGGER;
 }
 
 
@@ -127,7 +129,7 @@ next_instruction ()
     debugger_return_address = s;
     mos6502_emulate ();
 
-    return RETURN_FROM_DEBUGGER;
+    return LEAVE_DEBUGGER;
 }
 
 
@@ -141,7 +143,7 @@ execute_until (char * p)
 
     debugger_until_address = parse_address (p);
 
-    return RETURN_FROM_DEBUGGER;
+    return LEAVE_DEBUGGER;
 }
 
 
@@ -155,7 +157,7 @@ execute_from (char * p)
 
     pc = parse_address (p);
 
-    return RETURN_FROM_DEBUGGER;
+    return LEAVE_DEBUGGER;
 }
 
 
@@ -328,7 +330,7 @@ debugger ()
         linenoiseHistoryAdd (p);
         linenoiseHistorySave (HISTORY);
 
-        if (invoke_command (p))
+        if (invoke_command (p) == LEAVE_DEBUGGER)
             return;
         
         free (line);
