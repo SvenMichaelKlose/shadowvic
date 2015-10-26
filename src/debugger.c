@@ -44,35 +44,46 @@ parse_address (char * p)
     return strtol (p, NULL, 16);
 }
 
+void
+memory_dump_hex (address from, address to)
+{
+    int i;
+
+    for (i = 0; i < 16; i++) {
+        if (from >= to)
+            break;
+        if (i == 8)
+            printf (" ");
+        printf (" %02hx", m[from++]);
+    }
+}
+
+address
+memory_dump_ascii (address from, address to)
+{
+    int i;
+    byte c;
+
+    for (i = 0; i < 16; i++) {
+        if (from >= to)
+            break;
+        c = m[from++];
+        if (c < 32 || c > 126)
+            c = '.';
+        putc (c, stdout);
+    }
+
+    return from;
+}
 
 void
 memory_dump (address from, address to)
 {
-    address p = from;
-    address l;
-    byte c;
-    int i;
-
-    while (p < to) {
-        printf ("%04hx:", p);
-        l = p;
-        for (i = 0; i < 16; i++) {
-            if (p >= to)
-                break;
-            if (i == 8)
-                printf (" ");
-            printf (" %02hx", m[p++]);
-        }
+    while (from < to) {
+        printf ("%04hx:", from);
+        memory_dump_hex (from, to);
         printf ("  ");
-        p = l;
-        for (i = 0; i < 16; i++) {
-            if (p >= to)
-                break;
-            c = m[p++];
-            if (c < 32 || c > 126)
-                c = '.';
-            putc (c, stdout);
-        }
+        from = memory_dump_ascii (from, to);
         printf ("\n");
     }
 }
