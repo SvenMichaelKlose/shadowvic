@@ -148,7 +148,7 @@ dump_flags ()
 int
 dump_registers (char * p)
 {
-    printf ("Registers: A: %02hx X: %02hx Y: %02hx PC: %04hx ", a, x, y, pc);
+    printf ("Registers: A: %02hx X: %02hx Y: %02hx S: %02hx PC: %04hx ", a, x, y, s, pc);
     dump_flags ();
     printf ("\n");
 
