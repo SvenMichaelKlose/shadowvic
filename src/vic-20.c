@@ -12,6 +12,7 @@
 #include "6561.h"
 #include "joystick.h"
 #include "sync.h"
+#include "debugger.h"
 #include "shadowvic.h"
 
 #include "chargen.c"
@@ -53,39 +54,6 @@ screen_update ()
     video_commit ();
 #endif
     sync_frame ();
-}
-
-void
-memory_dump (address from, address to)
-{
-    address p = from;
-    address l;
-    byte c;
-    int i;
-
-    printf ("Memory dump from $%04hx to $%04hx:\n", from, to);
-    while (p < to) {
-        printf ("%04hx:", p);
-        l = p;
-        for (i = 0; i < 16; i++) {
-            if (p >= to)
-                break;
-            if (i == 8)
-                printf (" ");
-            printf (" %02hx", m[p++]);
-        }
-        printf ("  ");
-        p = l;
-        for (i = 0; i < 16; i++) {
-            if (p >= to)
-                break;
-            c = m[p++];
-            if (c < 32 || c > 126)
-                c = '.';
-            putc (c, stdout);
-        }
-        printf ("\n");
-    }
 }
 
 #define X_TEST      0
