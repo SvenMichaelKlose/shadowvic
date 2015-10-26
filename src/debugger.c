@@ -233,7 +233,15 @@ debugger ()
 }
 
 void
+user_break (int dummy)
+{
+    (void) dummy;
+
+    debugger ();
+}
+
+void
 init_debugger ()
 {
-    signal (SIGINT, debugger);
+    signal (SIGINT, user_break);
 }

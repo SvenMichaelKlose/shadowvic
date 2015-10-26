@@ -383,7 +383,11 @@ void
 e_ill ()
 {
     printf ("Illegal opcode %02hx at %04hx.\n", opcode, pc - 1);
+#ifdef WITHOUT_DEBUGGER
     exit (255);
+#else
+    debugger ();
+#endif
 }
 
 #include "6502-instructions.c"
