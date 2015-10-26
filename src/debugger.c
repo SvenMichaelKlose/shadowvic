@@ -122,6 +122,7 @@ backtrace (char * p)
     printf ("Stack: ");
     while (sp < 0xff)
         printf (" $%02hx", m[++sp + 0x100]);
+    printf ("\n");
 }
 
 
