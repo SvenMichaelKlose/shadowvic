@@ -132,6 +132,20 @@ execute_until (char * p)
 }
 
 
+int
+execute_from (char * p)
+{
+    if (!*p) {
+        printf ("Address expected where to resume execution.\n");
+        return FALSE;
+    }
+
+    pc = parse_address (p);
+
+    return TRUE;
+}
+
+
 void
 dump_flags ()
 {
@@ -207,6 +221,7 @@ print_help ()
     printf ("s       Step a single instruction.\n");
     printf ("n       Step to next instruction, don't step into BRK or JSR.\n");
     printf ("u addr  Continue program until 'addr' is reached.\n");
+    printf ("g addr  Resume program at 'addr'.\n");
     printf ("d addr  Disassemble %d items at 'addr'.\n", DISASSEMBLY_LENGTH);
     printf ("m addr  Dump 128 bytes of memory at 'addr'.\n");
     printf ("r       Show register values and flags.\n");
@@ -226,6 +241,7 @@ struct command {
     { "s",  step_instruction },
     { "n",  next_instruction },
     { "u",  execute_until },
+    { "g",  execute_from },
     { "r",  dump_registers },
     { "m",  dump_memory },
     { "bt", backtrace },
