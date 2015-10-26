@@ -9,6 +9,10 @@
 #define HISTORY     "shadowvic-debugger.history"
 #endif
 
+#ifndef DEBUGGER_WELCOME
+#define DEBUGGER_WELCOME "\nWelcome to the shadowVIC debugger.\n"
+#endif
+
 void
 print_help ()
 {
@@ -17,23 +21,26 @@ print_help ()
     printf ("h       Print this help text.\n");
 }
 
+char *
+skip_whitespace (char * p)
+{
+    while (*p && *p < ' ')
+        p++;
+    return p;
+}
+
 void
 debugger ()
 {
     char * line;
     char * p;
 
-    printf ("\nWelcome to the shadowVIC debugger.\n");
+    printf (DEBUGGER_WELCOME);
     linenoiseHistoryLoad (HISTORY);
 
     while ((line = linenoise ("> ")) != NULL) {
-        p = line;
+        p = skip_whitespace (line);
 
-        /* Skip white space. */
-        while (*p && *p < ' ')
-            p++;
-
-        /* Ignore empty lines. */
         if (!*p)
             continue;
 
