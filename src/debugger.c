@@ -27,6 +27,7 @@
 
 int debugger_break = FALSE;
 int debugger_return_address = -1;
+int debugger_until_address = -1;
 
 
 char *
@@ -36,6 +37,13 @@ skip_whitespace (char * p)
         p++;
     return p;
 }
+
+address
+parse_address (char * p)
+{
+    return strtol (p, NULL, 16);
+}
+
 
 void
 memory_dump (address from, address to)
@@ -77,7 +85,7 @@ disassembly (char * p)
 {
     int i = DISASSEMBLY_LENGTH;
     if (*p)
-        next_disassembly_address = strtol (p, NULL, 16);
+        next_disassembly_address = parse_address (p);
 
     while (i--)
         next_disassembly_address = disassemble (stdout, next_disassembly_address, DO_PRINT_LINEFEED);
@@ -105,6 +113,20 @@ next_instruction ()
         return step_instruction ();
     debugger_return_address = s;
     mos6502_emulate ();
+
+    return TRUE;
+}
+
+
+int
+execute_until (char * p)
+{
+    if (!*p) {
+        printf ("Address expected where to halt execution.\n");
+        return FALSE;
+    }
+
+    debugger_until_address = parse_address (p);
 
     return TRUE;
 }
@@ -141,7 +163,7 @@ dump_memory (char * p)
 {
     address from = next_memory_dump_address;
     if (*p)
-        from = strtol (p, NULL, 16);
+        from = parse_address (p);
 
     next_memory_dump_address = from + 128;
     memory_dump (from, next_memory_dump_address);
@@ -182,11 +204,12 @@ print_help ()
 {
     printf ("Command overview:\n\n");
     printf ("Ctrl+d  Continue program.\n");
-    printf ("d addr  Disassemble %d items at 'addr'.\n", DISASSEMBLY_LENGTH);
     printf ("s       Step a single instruction.\n");
     printf ("n       Step to next instruction, don't step into BRK or JSR.\n");
-    printf ("r       Show register values and flags.\n");
+    printf ("u addr  Continue program until 'addr' is reached.\n");
+    printf ("d addr  Disassemble %d items at 'addr'.\n", DISASSEMBLY_LENGTH);
     printf ("m addr  Dump 128 bytes of memory at 'addr'.\n");
+    printf ("r       Show register values and flags.\n");
     printf ("bt      Stack dump (will get backtrace functionality later).\n");
     printf ("q       Quit shadowVIC.\n");
     printf ("h       Print this help text.\n");
@@ -202,6 +225,7 @@ struct command {
     { "d",  disassembly },
     { "s",  step_instruction },
     { "n",  next_instruction },
+    { "u",  execute_until },
     { "r",  dump_registers },
     { "m",  dump_memory },
     { "bt", backtrace },
@@ -291,6 +315,10 @@ debugger_ctrl ()
     }
     if (debugger_return_address == s) {
         debugger_return_address = -1;
+        debugger ();
+    }
+    if (debugger_until_address == pc) {
+        debugger_until_address = -1;
         debugger ();
     }
 }
