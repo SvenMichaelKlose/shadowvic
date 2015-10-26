@@ -7,6 +7,8 @@
 
 #include "types.h"
 #include "6502.h"
+#include "disassembler.h"
+#include "debugger.h"
 
 #ifndef HISTORY
 #define HISTORY     "shadowvic-debugger.history"
@@ -14,6 +16,10 @@
 
 #ifndef DEBUGGER_WELCOME
 #define DEBUGGER_WELCOME "\nWelcome to the shadowVIC debugger.\n"
+#endif
+
+#ifndef DISASSEMBLY_LENGTH
+#define DISASSEMBLY_LENGTH  16
 #endif
 
 char *
@@ -56,6 +62,21 @@ memory_dump (address from, address to)
     }
 }
 
+address next_disassembly_address = 0;
+
+void
+disassembly (char * p)
+{
+    int i = DISASSEMBLY_LENGTH;
+    address from = next_disassembly_address;
+    if (*p)
+        from = strtol (p, NULL, 16);
+
+    while (i--)
+        next_disassembly_address = disassemble (stdout, next_disassembly_address);
+}
+
+
 address next_memory_dump_address = 0;
 
 void
@@ -82,6 +103,7 @@ void
 print_help ()
 {
     printf ("Command overview:\n");
+    printf ("d addr  Disassemble %d items at 'addr'.\n", DISASSEMBLY_LENGTH);
     printf ("m addr  Dump 128 bytes of memory at 'addr'.\n");
     printf ("q       Quit shadowVIC.\n");
     printf ("h       Print this help text.\n");
@@ -91,6 +113,7 @@ struct command {
     char * name;
     void (*handler) (char * p);
 } commands[] = {
+    { "d",  disassembly },
     { "m",  dump_memory },
     { "q",  exit_shadowvic },
     { "h",  print_help },
@@ -127,18 +150,31 @@ debugger_welcome_message ()
         printf ("\n");
 }
 
+void make_prompt (char * prompt)
+{
+    sprintf (prompt, "%04hx> ", next_disassembly_address);
+}
+
+char *
+read_command ()
+{
+    char prompt[256];
+
+    make_prompt (prompt);
+    return linenoise (prompt);
+}
+
 void
 debugger ()
 {
     char * line;
     char * p;
-    char prompt[256];
 
     debugger_welcome_message ();
     linenoiseHistoryLoad (HISTORY);
+    next_disassembly_address = pc;
 
-    sprintf (prompt, "%04hx >", pc);
-    while ((line = linenoise (prompt)) != NULL) {
+    while ((line = read_command ()) != NULL) {
         p = skip_whitespace (line);
         if (!*p)
             continue;

@@ -48,24 +48,30 @@ print_operand_string (FILE * f, struct operand_string * s, int addrmode)
     return s->str;
 }
 
-void
+address
 disassemble (FILE * f, address pc)
 {
     struct instruction * i = &opcode_map[m[pc]];
     struct operand_string * o = operand_strings;
+    address p = pc;
     byte sp = s;
 
-    fprintf (f, "$%04hx: %s ", pc, i->mnemonic);
+    fprintf (f, "%04hx: %s ", p, i->mnemonic);
+    p++;
 
     print_operand_string (f, o++, i->addrmode);
     print_operand_string (f, o++, i->addrmode);
 
-    if (i->addrmode & BYTE_AMS)
-        fprintf (f, "$%02hx", m[pc + 1]);
-    else if (i->addrmode & WORD_AMS)
-        fprintf (f, "$%04hx", m[pc + 1] + (m[pc + 2] << 8));
-    else if (i->addrmode & AM_BRANCH)
-        fprintf (f, "$%04hx", pc + 2 + (char) m[pc + 1]);
+    if (i->addrmode & BYTE_AMS) {
+        fprintf (f, "$%02hx", m[p]);
+        p++;
+    } else if (i->addrmode & WORD_AMS) {
+        fprintf (f, "$%04hx", m[p] + (m[pc + 1] << 8));
+        p += 2;
+    } else if (i->addrmode & AM_BRANCH) {
+        fprintf (f, "$%04hx", pc + 2 + (char) m[p]);
+        p++;
+    }
 
     while (print_operand_string (f, o++, i->addrmode));
 
@@ -75,4 +81,5 @@ disassemble (FILE * f, address pc)
 #endif
 
     fprintf (f, "\n");
+    return p;
 }

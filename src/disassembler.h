@@ -3,6 +3,6 @@
 #ifndef DISASSEMBLER_H
 #define DISASSEMBLER_H
 
-extern void disassemble (FILE*, address);
+extern address disassemble (FILE*, address);
 
 #endif /* #ifndef DISASSEMBLER_H */
