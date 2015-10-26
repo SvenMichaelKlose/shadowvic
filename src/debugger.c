@@ -115,13 +115,25 @@ invoke_command (char * p)
     return 0;
 }
 
+int debugger_was_running = FALSE;
+
+void
+debugger_welcome_message ()
+{
+    if (!debugger_was_running) {
+        printf (DEBUGGER_WELCOME);
+        debugger_was_running = TRUE;
+    } else
+        printf ("\n");
+}
+
 void
 debugger ()
 {
     char * line;
     char * p;
 
-    printf (DEBUGGER_WELCOME);
+    debugger_welcome_message ();
     linenoiseHistoryLoad (HISTORY);
 
     while ((line = linenoise ("> ")) != NULL) {
