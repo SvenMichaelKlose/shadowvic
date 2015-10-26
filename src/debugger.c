@@ -32,7 +32,6 @@ memory_dump (address from, address to)
     byte c;
     int i;
 
-    printf ("Memory dump from $%04hx to $%04hx:\n", from, to);
     while (p < to) {
         printf ("%04hx:", p);
         l = p;

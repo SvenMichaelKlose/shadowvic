@@ -94,6 +94,7 @@ mos6502_jam ()
         case X_DUMP:
             from = mos6502_fetch_word ();
             to = mos6502_fetch_word ();
+            printf ("Emulator escape code emory dump from $%04hx to $%04hx:\n", from, to);
             memory_dump (from, to);
             break;
         default:
