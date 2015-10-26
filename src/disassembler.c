@@ -49,11 +49,10 @@ print_operand_string (FILE * f, struct operand_string * s, int addrmode)
 }
 
 address
-disassemble (FILE * f, address pc)
+disassemble (FILE * f, address p)
 {
-    struct instruction * i = &opcode_map[m[pc]];
+    struct instruction * i = &opcode_map[m[p]];
     struct operand_string * o = operand_strings;
-    address p = pc;
 #ifdef STACKDUMP
     byte sp = s;
 #endif
@@ -68,10 +67,10 @@ disassemble (FILE * f, address pc)
         fprintf (f, "$%02hx", m[p]);
         p++;
     } else if (i->addrmode & WORD_AMS) {
-        fprintf (f, "$%04hx", m[p] + (m[pc + 1] << 8));
+        fprintf (f, "$%04hx", m[p] + (m[p + 1] << 8));
         p += 2;
     } else if (i->addrmode & AM_BRANCH) {
-        fprintf (f, "$%04hx", pc + 2 + (char) m[p]);
+        fprintf (f, "$%04hx", p + (char) m[p]);
         p++;
     }
 
