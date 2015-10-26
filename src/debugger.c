@@ -13,6 +13,23 @@
 #define DEBUGGER_WELCOME "\nWelcome to the shadowVIC debugger.\n"
 #endif
 
+char *
+skip_whitespace (char * p)
+{
+    while (*p && *p < ' ')
+        p++;
+    return p;
+}
+
+void
+exit_shadowvic (char * p)
+{
+    (void) p;
+
+    printf ("Exiting with code 255 – bye! :)\n");
+    exit (255);
+}
+
 void
 print_help ()
 {
@@ -21,12 +38,29 @@ print_help ()
     printf ("h       Print this help text.\n");
 }
 
-char *
-skip_whitespace (char * p)
+struct command {
+    char * name;
+    void (*handler) (char * p);
+} commands[] = {
+    { "q",  exit_shadowvic },
+    { "h",  print_help },
+    { NULL, NULL }
+};
+
+int
+invoke_command (char * p)
 {
-    while (*p && *p < ' ')
-        p++;
-    return p;
+    struct command * c = commands;
+
+    while (c->name) {
+        if (strncmp (p, c->name, strlen (c->name))) {
+            c++;
+            continue;
+        }
+        c->handler (p);
+        return -1;
+    }
+    return 0;
 }
 
 void
@@ -40,20 +74,13 @@ debugger ()
 
     while ((line = linenoise ("> ")) != NULL) {
         p = skip_whitespace (line);
-
         if (!*p)
             continue;
-
         linenoiseHistoryAdd (p);
         linenoiseHistorySave (HISTORY);
 
-        if (!strcmp (p, "q")) {
-            printf ("Bye! :)\n");
-            exit (255);
-        } else if (!strcmp (p, "h")) {
-            print_help ();
-        } else {
-            printf ("Unrecognized commend. ");
+        if (!invoke_command (p)) {
+            printf ("Unrecognized command. ");
             print_help ();
         }
         
