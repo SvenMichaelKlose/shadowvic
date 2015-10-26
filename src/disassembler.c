@@ -49,7 +49,7 @@ print_operand_string (FILE * f, struct operand_string * s, int addrmode)
 }
 
 address
-disassemble (FILE * f, address p)
+disassemble (FILE * f, address p, int print_linefeed)
 {
     struct instruction * i = &opcode_map[m[p]];
     struct operand_string * o = operand_strings;
@@ -81,6 +81,8 @@ disassemble (FILE * f, address p)
         fprintf (f, " $%02hx", m[++sp + 0x100]);
 #endif
 
-    fprintf (f, "\n");
+    if (print_linefeed)
+        fprintf (f, "\n");
+
     return p;
 }

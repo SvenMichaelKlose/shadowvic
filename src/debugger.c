@@ -80,7 +80,7 @@ disassembly (char * p)
         next_disassembly_address = strtol (p, NULL, 16);
 
     while (i--)
-        next_disassembly_address = disassemble (stdout, next_disassembly_address);
+        next_disassembly_address = disassemble (stdout, next_disassembly_address, DO_PRINT_LINEFEED);
 
     return FALSE;
 }
@@ -264,7 +264,9 @@ debugger ()
     linenoiseHistoryLoad (HISTORY);
     next_disassembly_address = pc;
 
-    (void) disassemble (stdout, pc);
+    (void) disassemble (stdout, pc, DONT_PRINT_LINEFEED);
+    printf ("\t\t");
+    (void) dump_registers (NULL);
 
     while ((line = read_command ()) != NULL) {
         p = skip_whitespace (line);

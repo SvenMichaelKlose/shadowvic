@@ -3,6 +3,8 @@
 #ifndef DISASSEMBLER_H
 #define DISASSEMBLER_H
 
-extern address disassemble (FILE*, address);
+#define DO_PRINT_LINEFEED       TRUE
+#define DONT_PRINT_LINEFEED     FALSE
+extern address disassemble (FILE*, address, int print_linefeed);
 
 #endif /* #ifndef DISASSEMBLER_H */
