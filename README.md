@@ -153,3 +153,10 @@ $22 $03 <from address> <to address>
 ```
 
 Dumps the specified address range like hexdump(1).
+
+
+# Debugger
+
+The debugger is invoked via Ctrl+C.  It is under construction
+and can only exit shadowVIC or print memory dumps.  Enter 'h'
+in the debugger to get a command overview.
