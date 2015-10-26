@@ -26,6 +26,7 @@
 
 
 int debugger_break = FALSE;
+int debugger_return_address = -1;
 
 
 char *
@@ -89,6 +90,23 @@ int
 step_instruction ()
 {
     return debugger_break = TRUE;
+}
+
+
+#define OPCODE_BRK  0x00
+#define OPCODE_JSR  0x20
+
+int
+next_instruction ()
+{
+    byte opcode = m[pc];
+
+    if (opcode != OPCODE_BRK && opcode != OPCODE_JSR)
+        return step_instruction ();
+    debugger_return_address = s;
+    mos6502_emulate ();
+
+    return TRUE;
 }
 
 
@@ -166,6 +184,7 @@ print_help ()
     printf ("Ctrl+d  Continue program.\n");
     printf ("d addr  Disassemble %d items at 'addr'.\n", DISASSEMBLY_LENGTH);
     printf ("s       Step a single instruction.\n");
+    printf ("n       Step to next instruction, don't step into BRK or JSR.\n");
     printf ("r       Show register values and flags.\n");
     printf ("m addr  Dump 128 bytes of memory at 'addr'.\n");
     printf ("bt      Stack dump (will get backtrace functionality later).\n");
@@ -182,6 +201,7 @@ struct command {
 } commands[] = {
     { "d",  disassembly },
     { "s",  step_instruction },
+    { "n",  next_instruction },
     { "r",  dump_registers },
     { "m",  dump_memory },
     { "bt", backtrace },
@@ -263,11 +283,14 @@ debugger ()
 void
 debugger_ctrl ()
 {
-    if (!debugger_break)
-        return;
-
-    debugger_break = FALSE;
-    debugger ();
+    if (debugger_break) {
+        debugger_break = FALSE;
+        debugger ();
+    }
+    if (debugger_return_address == s) {
+        debugger_return_address = -1;
+        debugger ();
+    }
 }
 
 void
