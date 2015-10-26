@@ -70,7 +70,7 @@ disassemble (FILE * f, address p)
         fprintf (f, "$%04hx", m[p] + (m[p + 1] << 8));
         p += 2;
     } else if (i->addrmode & AM_BRANCH) {
-        fprintf (f, "$%04hx", p + (char) m[p]);
+        fprintf (f, "$%04hx", p + 1 + (char) m[p]);
         p++;
     }
 
