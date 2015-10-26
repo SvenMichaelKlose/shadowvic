@@ -6,6 +6,7 @@
 #include "types.h"
 #include "6502.h"
 #include "disassembler.h"
+#include "debugger.h"
 
 #define FLAG_C  1
 #define FLAG_Z  2
@@ -386,7 +387,7 @@ e_ill ()
 #ifdef WITHOUT_DEBUGGER
     exit (255);
 #else
-    debugger ();
+    (void) debugger ();
 #endif
 }
 
