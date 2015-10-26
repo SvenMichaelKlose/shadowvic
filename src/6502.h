@@ -16,6 +16,7 @@ extern address mos6502_fetch_word (void);
 extern void mos6502_jam (void);
 
 extern void mos6502_reset (void);
+extern void mos6502_set_debugger_hook (void (*fun) ());
 extern void mos6502_emulate (void);
 extern void mos6502_interrupt (address);
 extern int mos6502_interrupt_flag ();

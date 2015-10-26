@@ -401,6 +401,14 @@ mos6502_reset ()
     pc = m[0xfffc] + (m[0xfffd] << 8);
 }
 
+void (*debugger_hook) () = NULL;
+
+void
+mos6502_set_debugger_hook (void (*fun) ())
+{
+    debugger_hook = fun;
+}
+
 void
 mos6502_emulate ()
 {
@@ -409,6 +417,8 @@ mos6502_emulate ()
 #endif
     opcode = e_fetch_byte ();
     instructions[opcode] ();
+    if (debugger_hook)
+        debugger_hook ();
 }
 
 void

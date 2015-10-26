@@ -245,12 +245,24 @@ debugger ()
     }
 }
 
+int debugger_user_break = FALSE;
+
+void
+debugger_ctrl ()
+{
+    if (!debugger_user_break)
+        return;
+
+    debugger_user_break = FALSE;
+    debugger ();
+}
+
 void
 user_break (int dummy)
 {
     (void) dummy;
 
-    debugger ();
+    debugger_user_break = TRUE;
 }
 
 void
@@ -261,5 +273,6 @@ init_debugger ()
         .sa_flags = 0
     };
 
+    mos6502_set_debugger_hook (debugger_ctrl);
     sigaction (SIGINT, &action, NULL);
 }
