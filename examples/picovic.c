@@ -11,9 +11,6 @@
 #include "sync.h"
 #include "debugger.h"
 
-#define FALSE   0
-#define TRUE    1
-
 int
 main (int argc, char * argv[])
 {
