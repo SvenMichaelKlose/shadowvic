@@ -11,6 +11,7 @@
 #include "debugger.h"
 #include "linenoise.h"
 
+
 #ifndef HISTORY
 #define HISTORY     "shadowvic-debugger.history"
 #endif
@@ -22,6 +23,10 @@
 #ifndef DISASSEMBLY_LENGTH
 #define DISASSEMBLY_LENGTH  16
 #endif
+
+
+int debugger_break = FALSE;
+
 
 char *
 skip_whitespace (char * p)
@@ -77,6 +82,13 @@ disassembly (char * p)
         next_disassembly_address = disassemble (stdout, next_disassembly_address);
 
     return FALSE;
+}
+
+
+int
+step_instruction ()
+{
+    return debugger_break = TRUE;
 }
 
 
@@ -153,6 +165,7 @@ print_help ()
     printf ("Command overview:\n\n");
     printf ("Ctrl+d  Continue program.\n");
     printf ("d addr  Disassemble %d items at 'addr'.\n", DISASSEMBLY_LENGTH);
+    printf ("s       Step a single instruction.\n");
     printf ("r       Show register values and flags.\n");
     printf ("m addr  Dump 128 bytes of memory at 'addr'.\n");
     printf ("bt      Stack dump (will get backtrace functionality later).\n");
@@ -168,6 +181,7 @@ struct command {
     int (*handler) (char * p);
 } commands[] = {
     { "d",  disassembly },
+    { "s",  step_instruction },
     { "r",  dump_registers },
     { "m",  dump_memory },
     { "bt", backtrace },
@@ -203,8 +217,7 @@ debugger_welcome_message ()
     if (!debugger_was_running) {
         printf (DEBUGGER_WELCOME);
         debugger_was_running = TRUE;
-    } else
-        printf ("\n");
+    }
 }
 
 void make_prompt (char * prompt)
@@ -231,6 +244,8 @@ debugger ()
     linenoiseHistoryLoad (HISTORY);
     next_disassembly_address = pc;
 
+    (void) disassemble (stdout, pc);
+
     while ((line = read_command ()) != NULL) {
         p = skip_whitespace (line);
         if (!*p)
@@ -245,15 +260,13 @@ debugger ()
     }
 }
 
-int debugger_user_break = FALSE;
-
 void
 debugger_ctrl ()
 {
-    if (!debugger_user_break)
+    if (!debugger_break)
         return;
 
-    debugger_user_break = FALSE;
+    debugger_break = FALSE;
     debugger ();
 }
 
@@ -262,7 +275,7 @@ user_break (int dummy)
 {
     (void) dummy;
 
-    debugger_user_break = TRUE;
+    debugger_break = TRUE;
 }
 
 void
