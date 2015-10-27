@@ -64,7 +64,7 @@
   :expanded?                nil
   :needs-paddles?           nil
   :manual-screen-updates?   t
-  :frames-per-second 36)
+  :frames-per-second        32)
 
 ;(gen-game-info
 ;  :binary                   "panicman.bin"

@@ -20,7 +20,7 @@ main (int argc, char * argv[])
         .is_expanded = FALSE,
         .use_paddles = FALSE,
         .manual_screen_updates = TRUE,
-        .frames_per_second = 36,
+        .frames_per_second = 32,
         .frame_interceptor = NULL
     };
 
