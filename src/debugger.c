@@ -24,8 +24,8 @@
 #define DISASSEMBLY_LENGTH  16
 #endif
 
-#define STAY_IN_DEBUGGER        FALSE
-#define LEAVE_DEBUGGER    TRUE
+#define STAY_IN_DEBUGGER    FALSE
+#define LEAVE_DEBUGGER      TRUE
 
 int debugger_break = FALSE;
 int debugger_return_address = -1;
@@ -165,13 +165,11 @@ void
 dump_flags ()
 {
     const char * flags = "NV.BDIZC";
-    int i;
     byte f = mos6502_flags ();
+    int i;
 
-    for (i = 0; i < 8; i++) {
+    for (i = 0; i < 8; i++, f <<= 1)
         putc (f & 128 ? flags[i] : '-', stdout);
-        f <<= 1;
-    }
 }
 
 int
@@ -289,10 +287,11 @@ int debugger_was_running = FALSE;
 void
 debugger_welcome_message ()
 {
-    if (!debugger_was_running) {
-        printf (DEBUGGER_WELCOME);
-        debugger_was_running = TRUE;
-    }
+    if (debugger_was_running)
+        return;
+
+    printf (DEBUGGER_WELCOME);
+    debugger_was_running = TRUE;
 }
 
 void make_prompt (char * prompt)
