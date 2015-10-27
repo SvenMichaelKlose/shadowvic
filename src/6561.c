@@ -85,11 +85,11 @@ vic_char_address (byte x)
 byte background_color;
 byte border_color;
 byte auxiliary_color;
+byte is_reverse;
 
 byte
 vic_color_index (byte x, byte c)
 {
-    byte is_reverse = m[0x900f] & 16;
     switch (x) {
         case 0: return is_reverse ? c : background_color;
         case 1: return border_color;
@@ -157,6 +157,7 @@ vic_get_colors ()
     background_color = m[0x900f] >> 4;
     border_color = m[0x900f] & 7;
     auxiliary_color = m[0x900e] >> 4;
+    is_reverse = m[0x900f] & 16;
 }
 
 void
