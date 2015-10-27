@@ -302,12 +302,12 @@ void e_plp () { e_set_flags (e_pop ()); }
  * Transfer
  */
 
-void e_tax () { x = a; }
-void e_txa () { a = x; }
-void e_tay () { y = a; }
-void e_tya () { a = y; }
-void e_txs () { s = x; }
-void e_tsx () { x = s; }
+void e_tax () { e_arith_flags (x = a); }
+void e_txa () { e_arith_flags (a = x); }
+void e_tay () { e_arith_flags (y = a); }
+void e_tya () { e_arith_flags (a = y); }
+void e_txs () { e_arith_flags (s = x); }
+void e_tsx () { e_arith_flags (x = s); }
 
 
 /*
