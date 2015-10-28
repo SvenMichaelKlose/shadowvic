@@ -10,6 +10,7 @@
 #include "video.h"
 #include "6502.h"
 #include "6561.h"
+#include "via.h"
 #include "joystick.h"
 #include "sync.h"
 #include "debugger.h"
@@ -206,10 +207,13 @@ irq ()
         mos6502_interrupt (m[0xfffe] + (m[0xffff] << 8));
 }
 
+#define VIA_FLAG_NMI_ENABLED    64
+#define NMI_IS_ENABLED()        (enabled_interrupts & VIA_FLAG_NMI_ENABLED)
+
 void
 nmi ()
 {
-    if (!mos6502_interrupt_flag ())
+    if (NMI_IS_ENABLED())
         mos6502_interrupt (m[0xfffa] + (m[0xfffb] << 8));
 }
 
