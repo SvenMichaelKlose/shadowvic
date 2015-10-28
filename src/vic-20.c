@@ -258,16 +258,34 @@ init_vectors ()
 }
 
 void
+rom_write (address addr, byte value)
+{
+    (void) addr;
+    (void) value;
+}
+
+void
+make_rom (address addr, byte * data, size_t size)
+{
+    int i;
+    for (i = 0; i < size; i++)
+        writers[addr + i] = rom_write;
+
+    memcpy (&m[addr], data, size);
+}
+
+void
 vic20_open (struct vic20_config * cfg)
 {
     config = cfg;
     do_exit = FALSE;
     sync_set_fps (config->frames_per_second);
-    bzero (m, 65536);
+    mos6502_init ();
 
-    memcpy (&m[0x8000], &chargen, sizeof (chargen));
-    memcpy (&m[0xc000], &basic, sizeof (basic));
-    memcpy (&m[0xe000], &kernal, sizeof (kernal));
+    bzero (m, 65536);
+    make_rom (0x8000, chargen, sizeof (chargen));
+    make_rom (0xc000, basic, sizeof (basic));
+    make_rom (0xe000, kernal, sizeof (kernal));
     init_vectors ();
     set_default_vic_register_values ();
 }

@@ -48,6 +48,7 @@ byte opcode;
  */
 
 byte m[65536];
+writer writers[65536];
 
 byte e_fetch_byte ()            { return m[pc++]; }
 byte mos6502_fetch_byte ()      { return e_fetch_byte (); }
@@ -58,15 +59,19 @@ address e_get_word (address e)    { return m[e] + (m[e + 1] << 8); }
 address e_get_zp_word (address e) { return m[e] + (m[(e + 1) & 0xff] << 8); }
 
 void
+ram_write (address addr, byte value)
+{
+    m[addr] = value;
+}
+
+void
 e_writeback ()
 {
-    if (operand >= 0xc000 || (operand >= 0x8000 && operand < 0x9000))
-        return;
     if (operand_is_accu) {
         a = r;
         operand_is_accu = FALSE;
     } else
-        m[operand] = r;
+        writers[operand] (operand, r);
 }
 
 
@@ -431,3 +436,12 @@ mos6502_interrupt (address new_pc)
 }
 
 int mos6502_interrupt_flag () { return i; }
+
+void
+mos6502_init ()
+{
+    int i;
+
+    for (i = 0; i < 0x10000; i++)
+        writers[i] = ram_write;
+}
