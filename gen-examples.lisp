@@ -66,15 +66,15 @@
   :manual-screen-updates?   t
   :frames-per-second        32)
 
-;(gen-game-info
-;  :binary                   "panicman.bin"
-;  :name                     "panicman"
-;  :start                    #x1201
-;  :load-address             #x11ff
-;  :expanded?                t
-;  :needs-paddles?           nil
-;  :manual-screen-updates?   t
-;  :frames-per-second        30)
+(gen-game-info
+  :binary                   "panicman.bin"
+  :name                     "panicman"
+  :start                    #x1201
+  :load-address             #x11ff
+  :expanded?                t
+  :needs-paddles?           nil
+  :manual-screen-updates?   t
+  :frames-per-second        30)
 
 (with-output-file o "examples/Makefile.am"
   (format o "~A~%" (apply #'+ "bin_PROGRAMS = tests picovic " (pad *apps* " ")))
