@@ -8,9 +8,9 @@
 #include "types.h"
 #include "6502.h"
 #include "disassembler.h"
-#include "debugger.h"
 #include "linenoise.h"
-
+#include "commands.h"
+#include "debugger.h"
 
 #ifndef HISTORY
 #define HISTORY     "shadowvic-debugger.history"
@@ -31,20 +31,6 @@ int debugger_break = FALSE;
 int debugger_return_address = -1;
 int debugger_until_address = -1;
 
-
-char *
-skip_whitespace (char * p)
-{
-    while (*p && *p < ' ')
-        p++;
-    return p;
-}
-
-address
-parse_address (char * p)
-{
-    return strtol (p, NULL, 16);
-}
 
 void
 memory_dump_hex (address from, address to)
@@ -246,10 +232,7 @@ print_help ()
 }
 
 
-struct command {
-    char * name;
-    int (*handler) (char * p);
-} commands[] = {
+struct command debugger_commands[] = {
     { "d",  disassembly },
     { "s",  step_instruction },
     { "n",  next_instruction },
@@ -266,20 +249,12 @@ struct command {
 int
 invoke_command (char * p)
 {
-    struct command * c = commands;
-    size_t l;
+    int result = parse_command (debugger_commands, p);
 
-    while (c->name) {
-        l = strlen (c->name);
-        if (strncmp (p, c->name, l)) {
-            c++;
-            continue;
-        }
-        return c->handler (skip_whitespace (p + l));
-    }
+    if (result == COMMAND_NOT_RECOGNIZED)
+        printf ("Unrecognized command. ");
 
-    printf ("Unrecognized command. ");
-    return print_help ();
+    return result;
 }
 
 int debugger_was_running = FALSE;
