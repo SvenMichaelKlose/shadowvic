@@ -12,10 +12,12 @@ struct vic20_config {
 };
 
 extern void vic20_open (struct vic20_config *);
+extern void vic20_eject_ram (address addr, size_t size);
 extern void vic20_record (int file);
 extern void vic20_play (int file);
 extern void vic20_stop (void);
 extern void vic20_emulate (unsigned program_start);
+extern void vic20_run_prg (char * path);
 extern void vic20_close ();
 
 #endif /* #ifndef SHADOWVIC_VIC */

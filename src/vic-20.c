@@ -14,6 +14,7 @@
 #include "joystick.h"
 #include "sync.h"
 #include "debugger.h"
+#include "prg-loader.h"
 #include "shadowvic.h"
 
 #include "chargen.c"
@@ -218,25 +219,78 @@ nmi ()
 }
 
 void
-vic20_emulate (unsigned program_start)
+vic20_init (unsigned program_start)
 {
     mos6502_reset ();
     pc = program_start;
     num_instructions = 0;
+}
 
-    while (!do_exit) {
-        mos6502_emulate ();
-        num_instructions++;
-        update_rastercount ();
-        if (FRAME_IS_COMPLETE()) {
-            if (!config->manual_screen_updates)
-                screen_update ();
-            get_joystick_status ();
-            irq ();
-        }
-        if (HALF_FRAME_IS_COMPLETE())
-            nmi ();
+void
+vic20_step ()
+{
+    mos6502_emulate ();
+    num_instructions++;
+    update_rastercount ();
+    if (FRAME_IS_COMPLETE()) {
+        if (!config->manual_screen_updates)
+            screen_update ();
+        get_joystick_status ();
+        irq ();
     }
+    if (HALF_FRAME_IS_COMPLETE())
+        nmi ();
+}
+
+void
+vic20_run ()
+{
+    while (!do_exit)
+        vic20_step ();
+}
+
+void
+vic20_emulate (unsigned program_start)
+{
+    vic20_init (program_start);
+    vic20_run ();
+}
+
+byte basic_starter[] = {
+    0x20, 0x59, 0xc6,  /* jsr $c659 */
+    0x20, 0x33, 0xc5,  /* jsr $c533 */
+    0x4c, 0xae, 0xc7   /* jmp $c7ae */
+};
+
+void
+vic20_run_prg (char * pathname)
+{
+    int i;
+    address end_addr;
+    struct prg_info pi = {
+        .pathname       = pathname,
+        .is_relocated   = TRUE
+    };
+
+    printf ("Booting BASIC…\n");
+    vic20_init (m[0xfffc] + (m[0xfffd] << 8));
+    for (i = 0; i < 500000; i++)
+        vic20_step ();
+    while (mos6502_interrupt_flag ())
+        vic20_step ();
+    /* READY, Daddy. */
+
+    load_prg (&pi);
+    printf ("Returned load address is %04hx.\n", pi.load_addr);
+    printf ("Returned size is %04hx.\n", pi.size);
+    end_addr = pi.load_addr + pi.size;
+    printf ("BASIC end is %04hx.\n", end_addr);
+    m[pi.load_addr - 1] = 0;    /* Just to save other people time. */
+    m[0x2d] = end_addr & 0xff;
+    m[0x2e] = end_addr >> 8;
+    memcpy (&m[0xa000], basic_starter, sizeof (basic_starter));
+    pc = 0xa000;
+    vic20_run ();
 }
 
 void
@@ -269,12 +323,19 @@ rom_write (address addr, byte value)
 }
 
 void
-make_rom (address addr, byte * data, size_t size)
+vic20_eject_ram (address addr, size_t size)
 {
     int i;
+
     for (i = 0; i < size; i++)
         writers[addr + i] = rom_write;
+}
 
+
+void
+make_rom (address addr, byte * data, size_t size)
+{
+    vic20_eject_ram (addr, size);
     memcpy (&m[addr], data, size);
 }
 
@@ -290,6 +351,12 @@ vic20_open (struct vic20_config * cfg)
     make_rom (0x8000, chargen, sizeof (chargen));
     make_rom (0xc000, basic, sizeof (basic));
     make_rom (0xe000, kernal, sizeof (kernal));
+    if (!cfg->is_expanded) {
+        make_rom (0x400, kernal, 0xc00);
+        make_rom (0x2000, kernal, sizeof (chargen));
+        make_rom (0x4000, kernal, sizeof (chargen));
+        make_rom (0x6000, kernal, sizeof (chargen));
+    }
     init_vectors ();
     set_default_vic_register_values ();
 }

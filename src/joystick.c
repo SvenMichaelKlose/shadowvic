@@ -9,6 +9,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "types.h"
 #include "joystick.h"
 #include "shadowvic.h"
 

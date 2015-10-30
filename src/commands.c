@@ -35,6 +35,5 @@ parse_command (struct command * commands, char * p)
         return commands->handler (skip_whitespace (p + l));
     }
 
-    printf ("Unrecognized command. ");
     return COMMAND_NOT_RECOGNIZED;
 }
