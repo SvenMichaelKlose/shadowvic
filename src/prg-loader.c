@@ -31,6 +31,6 @@ load_prg (struct prg_info * i)
     }
 
     i->size = read (fd, &m[i->load_addr], 65536);
-    printf ("Loaded %d bytes.\n", i->size);
+    printf ("Loaded %d bytes.\n", (int) i->size);
     close (fd);
 }
