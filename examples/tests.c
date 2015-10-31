@@ -17,7 +17,8 @@ int
 main (int argc, char * argv[])
 {
     struct vic20_config config = {
-        .is_expanded = FALSE,
+        .memory_expansion_3k = FALSE,
+        .memory_expansion = 0,
         .use_paddles = FALSE,
         .manual_screen_updates = FALSE,
         .frames_per_second = 50,

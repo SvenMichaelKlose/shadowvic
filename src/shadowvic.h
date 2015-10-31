@@ -4,7 +4,8 @@
 #define SHADOWVIC_VIC
 
 struct vic20_config {
-    int is_expanded;                /* Have full memory? */
+    int memory_expansion_3k;        /* RAM at 0x0400-0xfff? */
+    int memory_expansion;           /* 0-3: RAM at 0x20000-0x7fff? */
     int use_paddles;                /* Paddles instead of joystick? (inpractical) */
     int frames_per_second;          /* PAL 50, NTSC 60 */
     int manual_screen_updates;      /* No automatic screen updates? */

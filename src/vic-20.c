@@ -300,7 +300,7 @@ set_default_vic_register_values ()
 
     for (i = 0; i < 16; i++)
         m[0x9000 + i] = m[0xede4 + i];
-    if (!config->is_expanded)
+    if (!config->memory_expansion)
         m[0x9002] = m[0x9002] | 128;
 }
 
@@ -351,12 +351,14 @@ vic20_open (struct vic20_config * cfg)
     make_rom (0x8000, chargen, sizeof (chargen));
     make_rom (0xc000, basic, sizeof (basic));
     make_rom (0xe000, kernal, sizeof (kernal));
-    if (!cfg->is_expanded) {
-        make_rom (0x400, kernal, 0xc00);
-        make_rom (0x2000, kernal, sizeof (chargen));
-        make_rom (0x4000, kernal, sizeof (chargen));
-        make_rom (0x6000, kernal, sizeof (chargen));
-    }
+    if (!cfg->memory_expansion_3k)
+        vic20_eject_ram (0x400, 0xc00);
+    if (cfg->memory_expansion < 3)
+        vic20_eject_ram (0x6000, 0x2000);
+    if (cfg->memory_expansion < 2)
+        vic20_eject_ram (0x4000, 0x2000);
+    if (cfg->memory_expansion < 1)
+        vic20_eject_ram (0x2000, 0x2000);
     init_vectors ();
     set_default_vic_register_values ();
 }

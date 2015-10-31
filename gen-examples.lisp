@@ -8,7 +8,9 @@
 
 (defun gen-game-info (&key binary name
                            start load-address
-                           expanded? needs-paddles?
+                           (memory-expansion-3k? nil)
+                           (memory-expansion 0)
+                           needs-paddles?
                            (manual-screen-updates? nil)
                            (frames-per-second 50))
   (with (id       (+ name "_image")
@@ -35,7 +37,8 @@
     (format o "main (int argc, char * argv[])~%")
     (format o "{~%")
     (format o "    struct vic20_config config = {~%")
-    (format o "        .is_expanded = ~A,~%" (c-truth expanded?))
+    (format o "        .memory_expansion_3k = ~A,~%" (c-truth memory-expansion-3k?))
+    (format o "        .memory_expansion = ~A,~%" memory-expansion)
     (format o "        .use_paddles = FALSE,~%" (c-truth needs-paddles?))
     (format o "        .manual_screen_updates = ~A,~%" (c-truth manual-screen-updates?))
     (format o "        .frames_per_second = ~A,~%" frames-per-second)
@@ -61,17 +64,17 @@
   :name                     "pulse"
   :start                    #x2000
   :load-address             #x2000
-  :expanded?                nil
+  :memory-expansion         0
   :needs-paddles?           nil
   :manual-screen-updates?   t
   :frames-per-second        32)
 
 (gen-game-info
-  :binary                   "panicman.bin"
+  :binary                   "examples/panicman.bin"
   :name                     "panicman"
   :start                    #x1201
   :load-address             #x11ff
-  :expanded?                t
+  :memory-expansion         1
   :needs-paddles?           nil
   :manual-screen-updates?   t
   :frames-per-second        30)
