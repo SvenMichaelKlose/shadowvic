@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "types.h"
 #include "config.h"
@@ -28,11 +29,13 @@ open_picovic ()
         .frames_per_second = 50,
         .frame_interceptor = NULL
     };
+    struct vic20_config * cfg = malloc (sizeof (struct vic20_config));
+    memcpy (cfg, &config, sizeof (struct vic20_config));
 
     joystick_open ();
     video_open ();
     video_map ();
-    vic20_open (&config);
+    vic20_open (cfg);
     init_debugger ();
 }
 
@@ -99,6 +102,7 @@ exit_on_argument_errors ()
 {
     if (!argument_errors)
         return;
+    printf ("Exiting due to argument error.\n");
     close_picovic ();
     exit (255);
 }
