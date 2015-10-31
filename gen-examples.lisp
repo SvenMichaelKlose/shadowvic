@@ -64,7 +64,7 @@
   :name                     "pulse"
   :start                    #x2000
   :load-address             #x2000
-  :memory-expansion         0
+  :memory-expansion         1
   :needs-paddles?           nil
   :manual-screen-updates?   t
   :frames-per-second        32)
