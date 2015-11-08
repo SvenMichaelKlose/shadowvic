@@ -20,15 +20,27 @@ unsigned pixel_height;
 unsigned screen_columns;
 unsigned screen_rows;
 
+byte background_color;
+byte border_color;
+byte auxiliary_color;
+byte is_reverse;
+byte char_height;
+
 #define SCREEN_WIDTH        (screen_columns * 8)
-#define SCREEN_HEIGHT       (screen_rows * 8)
+#define SCREEN_HEIGHT       (screen_rows * char_height)
 
 #define PHYS_SCREEN_WIDTH   (SCREEN_WIDTH * pixel_width)
 #define PHYS_SCREEN_HEIGHT  (SCREEN_HEIGHT * pixel_height)
-#define HORIZONTAL_BORDER ((display_height - PHYS_SCREEN_HEIGHT) / 2)
-#define VERTICAL_BORDER ((display_width - PHYS_SCREEN_WIDTH) / 2)
+#define HORIZONTAL_BORDER   ((display_height - PHYS_SCREEN_HEIGHT) / 2)
+#define VERTICAL_BORDER     ((display_width - PHYS_SCREEN_WIDTH) / 2)
 
 #include "palette.c"
+
+byte
+vic_char_height ()
+{
+    return (m[0x9003] & 1) ? 16 : 8;
+}
 
 address
 vic_address (byte bits10to12)
@@ -79,13 +91,8 @@ byte vic_color (unsigned x, unsigned y)
 byte *
 vic_char_address (byte x)
 {
-    return &m[vic_charset () + x * 8];
+    return &m[vic_charset () + x * char_height];
 }
-
-byte background_color;
-byte border_color;
-byte auxiliary_color;
-byte is_reverse;
 
 byte
 vic_color_index (byte x, byte c)
@@ -113,12 +120,12 @@ vic_draw_char (unsigned x, unsigned y)
     unsigned yc;
     unsigned xc;
     int px = x * 8 * pixel_width + VERTICAL_BORDER;
-    int py = y * 8 * pixel_height + HORIZONTAL_BORDER;
+    int py = y * char_height * pixel_height + HORIZONTAL_BORDER;
     byte * p = vic_char_address (vic_charcode (x, y));
 
     c = c & 7;
 
-    for (yc = 0; yc < 8; yc++) {
+    for (yc = 0; yc < char_height; yc++) {
         l = *p++;
         if (m)
             for (xc = 0; xc < 4; xc++, l <<= 2)
@@ -163,6 +170,7 @@ vic_get_colors ()
 void
 vic_set_proportions (unsigned disp_width, unsigned disp_height)
 {
+    char_height = vic_char_height ();
     display_width = disp_width;
     display_height = disp_height;
     pixel_height = display_height / SCREEN_HEIGHT;
