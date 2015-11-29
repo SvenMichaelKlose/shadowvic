@@ -162,9 +162,9 @@ void
 vic_get_colors ()
 {
     background_color = m[0x900f] >> 4;
+    is_reverse = !(m[0x900f] & 8);
     border_color = m[0x900f] & 7;
     auxiliary_color = m[0x900e] >> 4;
-    is_reverse = m[0x900f] & 16;
 }
 
 void
