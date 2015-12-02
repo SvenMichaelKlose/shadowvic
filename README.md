@@ -23,6 +23,7 @@ how to implement them (please!):
 # Contributors
 
 * Sven Michael Klose <pixel@hugbox.org>
+* Eric Hilaire
 
 
 # Building

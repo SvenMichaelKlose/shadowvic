@@ -1,4 +1,5 @@
-/* bender – Copyright (c) 2015 Sven Michael Klose <pixel@hugbox.org> */
+/* bender – Copyright (c) 2015 Sven Michael Klose <pixel@hugbox.org>
+            Copyright (c) 2015 Eric Hilaire */
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -188,12 +189,13 @@ e_adc ()
 
 #ifndef CPU_2A03
     if (d) {
-        c = 0;
-        e = (a & 0x0f) + (r & 0x0f);
+        e = (a & 0x0f) + (r & 0x0f) + c;
         if (e > 0x09)
             e += 0x06;
         e += (a & 0xf0) + (r & 0xf0);
-        if (e > 0x90) {
+
+        c = 0;
+        if ((e & $f0) > 0x90) {
             e += 0x60;
             c = 1;
         }
