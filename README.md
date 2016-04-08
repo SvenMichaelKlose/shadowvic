@@ -24,6 +24,7 @@ how to implement them (please!):
 
 * Sven Michael Klose <pixel@hugbox.org>
 * Eric Hilaire
+* Robert Hurst
 
 
 # Building
@@ -134,7 +135,7 @@ match.
 $22 $01
 ```
 
-Exits the emulator.
+Exits the emulator. Actually makes functions vic20_run()/vic20_emulate() return.
 
 
 ## Screen update
