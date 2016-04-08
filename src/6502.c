@@ -333,13 +333,15 @@ e_push_pc ()
 void
 e_rts ()
 {
-    pc = e_pop () + (e_pop () << 8);
+    pc = (e_pop () + (e_pop () << 8)) + 1;
 }
 
 void
 e_jsr ()
 {
+    pc--;
     e_push_pc ();
+    pc++;
     e_jmp ();
 }
 
@@ -377,7 +379,7 @@ void
 e_rti ()
 {
     e_plp ();
-    e_rts ();
+    pc = e_pop () + (e_pop () << 8);
 }
 
 
