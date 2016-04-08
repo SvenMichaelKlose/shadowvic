@@ -1,4 +1,5 @@
-/* shadowVIC – Copyright (c) 2015 Sven Michael Klose <pixel@hugbox.org> */
+/* shadowVIC – Copyright (c) 2015 Sven Michael Klose <pixel@hugbox.org>
+               Copyright (c) 2015 Robert Hurst */
 
 #include <string.h>
 #include <stdlib.h>
@@ -256,10 +257,20 @@ vic20_emulate (unsigned program_start)
     vic20_run ();
 }
 
+byte booter[] = {
+    0x20, 0x8d, 0xfd,  /* jsr ramtas */
+    0x20, 0x52, 0xfd,  /* jsr restor */
+    0x20, 0xf9, 0xfd,  /* jsr ioinit */
+    0x20, 0x18, 0xe5,  /* jsr cint1 */
+    0x20, 0x5b, 0xe4,  /* jsr initv */
+    0x20, 0xa4, 0xe3,  /* jsr initcz */
+    0x22, 0x01         /* return from emulation */
+};
+
 byte basic_starter[] = {
-    0x20, 0x59, 0xc6,  /* jsr $c659 */
-    0x20, 0x33, 0xc5,  /* jsr $c533 */
-    0x4c, 0xae, 0xc7   /* jmp $c7ae */
+    0x20, 0x59, 0xc6,   /* Reset execution to start. clear variables and flush stack. */
+    0x20, 0x33, 0xc5,   /* jsr $c533 */
+    0x4c, 0xae, 0xc7    /* Goto BASIC. */
 };
 
 void
@@ -274,11 +285,10 @@ vic20_run_prg (char * pathname)
 
     printf ("Booting BASIC…\n");
     vic20_init (m[0xfffc] + (m[0xfffd] << 8));
-    for (i = 0; i < 500000; i++)
-        vic20_step ();
-    while (mos6502_interrupt_flag ())
-        vic20_step ();
-    /* READY, Daddy. */
+    memcpy (&m[0xa000], booter, sizeof (booter));
+    pc = 0xa000;
+    vic20_run ();
+    do_exit = FALSE;
 
     load_prg (&pi);
     printf ("Returned load address is %04hx.\n", pi.load_addr);
@@ -286,6 +296,8 @@ vic20_run_prg (char * pathname)
     end_addr = pi.load_addr + pi.size;
     printf ("BASIC end is %04hx.\n", end_addr);
     m[pi.load_addr - 1] = 0;    /* Just to save other people time. */
+    m[0x2b] = pi.load_addr & 0xff;
+    m[0x2c] = pi.load_addr >> 8;
     m[0x2d] = end_addr & 0xff;
     m[0x2e] = end_addr >> 8;
     memcpy (&m[0xa000], basic_starter, sizeof (basic_starter));
