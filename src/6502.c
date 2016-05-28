@@ -1,5 +1,6 @@
 /* bender – Copyright (c) 2015 Sven Michael Klose <pixel@hugbox.org>
-            Copyright (c) 2015 Eric Hilaire */
+            Copyright (c) 2015 Eric Hilaire
+            Additional fixes (BIT/PLA) thanks to Gábor Lenárt. */
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -275,8 +276,9 @@ e_ror ()
 void
 e_bit ()
 {
+    n = r & 0x80;
+    z = !(a & r);
     v = r & 0x40;
-    e_arith_flags (a & r);
 }
 
 void
@@ -300,7 +302,7 @@ void e_push (byte o) { m[s-- + 0x100] = o; }
 byte e_pop ()        { return m[++s + 0x100]; }
 
 void e_pha () { e_push (a); }
-void e_pla () { a = e_pop (); }
+void e_pla () { e_arith_flags (a = e_pop ()); }
 void e_php () { e_push (e_get_flags ()); }
 void e_plp () { e_set_flags (e_pop ()); }
 
@@ -434,7 +436,7 @@ void
 mos6502_interrupt (address new_pc)
 {
     e_push_pc ();
-    e_php ();
+    e_push (e_get_flags () & (255 ^ FLAG_B));
     i = 1;
     pc = new_pc;
 }
