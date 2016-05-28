@@ -1,6 +1,6 @@
 /* bender – Copyright (c) 2015 Sven Michael Klose <pixel@hugbox.org>
             Copyright (c) 2015 Eric Hilaire
-            Additional fixes (BIT/PLA) thanks to Gábor Lenárt. */
+            Copyright (c) 2016 Gábor Lenárt */
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -190,25 +190,25 @@ e_adc ()
 
 #ifndef CPU_2A03
     if (d) {
-        e = (a & 0x0f) + (r & 0x0f) + c;
-        if (e > 0x09)
-            e += 0x06;
-        e += (a & 0xf0) + (r & 0xf0);
-
-        c = 0;
-        if ((e & 0xf0) > 0x90) {
-            e += 0x60;
-            c = 1;
-        }
+	    address e2 = (a & 0xF0) + (r & 0xF0);
+        e = (a & 0x0F) + (r & 0x0F) + (c ? 1 : 0);
+        if (e > 9) { e2 += 0x10; e += 6;
+    }
+    v = (~(a ^ r) & (a ^ e) & 0x80);
+    if (e2 > 0x90)
+        e2 += 0x60;
+    c = (e2 > 0xFF);
+    e_arith_flags (a = (e & 0x0F) + (e2 & 0xF0));
     } else {
 #endif
         e = a + r + (c ? 1 : 0);
-        v = (a ^ r) & (a ^ e) & 0x80;
+        //v = (a ^ r) & (a ^ e) & 0x80;
+	v = (!((a ^ r) & 0x80) && ((a ^ e) & 0x80));
         c = 0xff < e ? 1 : 0;
+	e_arith_flags (a = e);
 #ifndef CPU_2A03
     }
 #endif
-    e_arith_flags (a = e);
 }
 
 void
@@ -216,12 +216,22 @@ e_sbc ()
 {
 #ifndef CPU_2A03
     if (d) {
-        c = 0;
-        r -= 0x66;
-    } else
+	    address e = a - (r & 0x0F) - (c ? 0 : 1);
+	    if ((e & 0x0F) > (a & 0x0F))
+            e -= 6;
+	    e -= (r & 0xF0);
+	    if ((e & 0xF0) > (a & 0xF0))
+            e -= 0x60;
+	    v = (!(e > a));
+	    c = (!(e > a));
+	    e_arith_flags (a = e);
+    } else {
 #endif
         r ^= 0xff;
-    e_adc ();
+        e_adc ();
+#ifndef CPU_2A03
+   }
+#endif
 }
 
 
@@ -276,8 +286,8 @@ e_ror ()
 void
 e_bit ()
 {
+    e_arith_flags (a & r);
     n = r & 0x80;
-    z = !(a & r);
     v = r & 0x40;
 }
 
@@ -302,8 +312,8 @@ void e_push (byte o) { m[s-- + 0x100] = o; }
 byte e_pop ()        { return m[++s + 0x100]; }
 
 void e_pha () { e_push (a); }
-void e_pla () { e_arith_flags (a = e_pop ()); }
-void e_php () { e_push (e_get_flags ()); }
+void e_pla () { e_arith_flags(a = e_pop ()); }
+void e_php () { e_push (e_get_flags () | FLAG_B); }
 void e_plp () { e_set_flags (e_pop ()); }
 
 
@@ -424,7 +434,7 @@ void
 mos6502_emulate ()
 {
 #ifdef DISASSEMBLE
-    disassemble (stdout, pc);
+    disassemble (stdout, pc, 1);
 #endif
     opcode = e_fetch_byte ();
     instructions[opcode] ();
@@ -436,7 +446,7 @@ void
 mos6502_interrupt (address new_pc)
 {
     e_push_pc ();
-    e_push (e_get_flags () & (255 ^ FLAG_B));
+    e_push (e_get_flags () & ~FLAG_B);
     i = 1;
     pc = new_pc;
 }
