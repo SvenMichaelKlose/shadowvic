@@ -9,7 +9,7 @@
 
 unsigned video_bytes_per_pixel;
 
-inline void
+void
 draw_pixel (unsigned x, unsigned y, rgb565_t color)
 {
     unsigned ofs = x * video_bytes_per_pixel + y * video_line_length ();
@@ -25,7 +25,7 @@ draw_pixel (unsigned x, unsigned y, rgb565_t color)
         * (address *) &pixels[ofs] = color;
 }
 
-inline void
+void
 draw_rectangle (unsigned x, unsigned y,
                 unsigned w, unsigned h,
                 rgb565_t color)

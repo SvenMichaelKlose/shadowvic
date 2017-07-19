@@ -6,8 +6,8 @@ extern byte * pixels;
 extern unsigned video_bytes_per_pixel;
 typedef unsigned short rgb565_t;
 
-inline void draw_pixel (unsigned x, unsigned y, rgb565_t);
-inline void draw_rectangle (unsigned x, unsigned y, unsigned w, unsigned h, rgb565_t);
+void draw_pixel (unsigned x, unsigned y, rgb565_t);
+void draw_rectangle (unsigned x, unsigned y, unsigned w, unsigned h, rgb565_t);
 void draw_char (byte * char_lines, unsigned x, unsigned y, unsigned pixel_width, unsigned pixel_height, rgb565_t fg, rgb565_t bg);
 void draw_string (char * s, byte * charset, unsigned x, unsigned y, unsigned pixel_width, unsigned pixel_height, rgb565_t fg, rgb565_t bg);
 void draw_string_center (char * s, byte * charset, unsigned y, unsigned w, unsigned h, rgb565_t fg, rgb565_t bg);
