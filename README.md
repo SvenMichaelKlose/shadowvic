@@ -88,7 +88,7 @@ is done by pressing Ctrl, Alt and some function key.
 
 shadowVIC emulates:
 
-* 6502 CPU without BCD math or undocumented instructions
+* 6502 CPU without undocumented instructions
 * most basic 6560/6561 graphics display
 * VIA joystick status
 
