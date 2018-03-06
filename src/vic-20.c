@@ -237,7 +237,8 @@ vic20_step ()
         if (!config->manual_screen_updates)
             screen_update ();
         get_joystick_status ();
-        irq ();
+        if (config->frame_irq)
+            irq ();
     }
     if (HALF_FRAME_IS_COMPLETE())
         nmi ();

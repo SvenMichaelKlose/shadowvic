@@ -22,6 +22,7 @@ main (int argc, char * argv[])
         .use_paddles = FALSE,
         .manual_screen_updates = TRUE,
         .frames_per_second = 30,
+        .frame_irq = FALSE,
         .frame_interceptor = NULL
     };
 

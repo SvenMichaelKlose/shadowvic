@@ -9,6 +9,7 @@ struct vic20_config {
     int use_paddles;                /* Paddles instead of joystick? (inpractical) */
     int frames_per_second;          /* PAL 50, NTSC 60 */
     int manual_screen_updates;      /* No automatic screen updates? */
+    int frame_irq;                  /* Have an IRQ each frame? */
     void (*frame_interceptor) ();   /* Called just before screen is shown. */
 };
 

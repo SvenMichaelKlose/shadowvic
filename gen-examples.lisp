@@ -12,7 +12,8 @@
                            (memory-expansion 0)
                            needs-paddles?
                            (manual-screen-updates? nil)
-                           (frames-per-second 50))
+                           (frames-per-second 50)
+                           (frame-irq? nil))
   (with (id       (+ name "_image")
          outpath  (format nil "examples/~A.c" name))
   (format t "Generating ~A to `~A'…~%" name outpath)
@@ -42,6 +43,7 @@
     (format o "        .use_paddles = FALSE,~%" (c-truth needs-paddles?))
     (format o "        .manual_screen_updates = ~A,~%" (c-truth manual-screen-updates?))
     (format o "        .frames_per_second = ~A,~%" frames-per-second)
+    (format o "        .frame_irq = ~A,~%" (c-truth frame-irq?))
     (format o "        .frame_interceptor = NULL~%")
     (format o "    };~%")
     (terpri o)
@@ -82,11 +84,12 @@
 (gen-game-info
   :binary                   "examples/arukanoido.bin"
   :name                     "arukanoido"
-  :start                    #x2000
-  :load-address             #x2000
+  :start                    #x1000
+  :load-address             #x1000
   :memory-expansion         1
   :needs-paddles?           t
   :manual-screen-updates?   t
+  :frame-irq?               nil
   :frames-per-second        50)
 
 (with-output-file o "examples/Makefile.am"
