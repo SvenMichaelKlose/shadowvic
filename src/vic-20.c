@@ -293,7 +293,7 @@ vic20_run_prg (char * pathname)
 
     load_prg (&pi);
     printf ("Returned load address is %04hx.\n", pi.load_addr);
-    printf ("Returned size is %04hx.\n", pi.size);
+    printf ("Returned size is %04lx.\n", pi.size);
     end_addr = pi.load_addr + pi.size;
     printf ("BASIC end is %04hx.\n", end_addr);
     m[pi.load_addr - 1] = 0;    /* Just to save other people time. */
